@@ -1,6 +1,10 @@
 <?php
 
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Route;
+=======
+use Illuminate\Support\Facades\Route; // Facade para definir rutas
+>>>>>>> e47cdeb84a46eff582ba89ac4e003f15711ff503
 use App\Http\Controllers\ProductoController; // Controlador para productos
 use App\Http\Controllers\CarritoController;  // Controlador para carrito
 use App\Http\Controllers\ProfileController;  // Controlador para perfil (de Breeze)

@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller; // Importa el Controller base
 use App\Models\Pedido; // Necesitamos el modelo Pedido
 use App\Models\Producto; // Necesitamos el modelo Producto
 use App\Models\User; // Necesitamos el modelo User
+<<<<<<< HEAD
 use Illuminate\Http\Request;
 use App\Models\MensajeSoporte;
+=======
+use Illuminate\Http\Request; // Para manejar solicitudes HTTP
+use App\Models\MensajeSoporte; // Modelo para los mensajes de soporte
+>>>>>>> e47cdeb84a46eff582ba89ac4e003f15711ff503
 use Illuminate\View\View; // Para type hinting
 
 class AdminDashboardController extends Controller
