@@ -1,56 +1,74 @@
 <?php
 
-namespace App\Http\Controllers\Admin; // Namespace correcto
+namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller; // Importa el Controller base
-use App\Models\Pedido; // Necesitamos el modelo Pedido
-use App\Models\Producto; // Necesitamos el modelo Producto
-use App\Models\User; // Necesitamos el modelo User
-use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Models\Pedido;
+use App\Models\Producto;
+use App\Models\User;
+use App\Models\DetallePedido;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Exception;
 use App\Models\MensajeSoporte;
-use Illuminate\View\View; // Para type hinting
+use Illuminate\View\View;
 
 class AdminDashboardController extends Controller
 {
-    /**
-     * Muestra la página principal del dashboard de administración.
-     * Adapta la lógica de index
-     * y los métodos de conteo de AdminModel
-     */
-    public function index(): View // Especificamos que devuelve una Vista
+    public function index(): View
     {
-        // Contar usuarios (excluyendo administradores)
-        $total_usuarios = User::where('rol', 'usuario')->count();
 
-        // Contar todos los productos
+        // Total Productos
         $total_productos = Producto::count();
 
-        // Calcular ventas totales (suma del 'total' de pedidos 'Entregado')
-        $total_ventas = Pedido::where('estado', 'Entregado')->sum('total');
+        // Total Ventas (pedidos entregados)
+        $total_ventas = Pedido::where('estado', 'Entregado')->count();
+        
+        // Total Clientes (usuarios con rol usuario)
+        $total_clientes = User::where('rol', 'usuario')->count();
+        
+        // Ventas Hoy (pedidos entregados hoy)
+        $ventas_hoy = Pedido::where('estado', 'Entregado')
+            ->whereDate('fecha_pedido', Carbon::today())
+            ->count();
 
-        // Pasamos los datos a la vista 'admin.dashboard' que crearemos luego
+        // Productos Vendidos Hoy (con total de dinero)
+        try {
+            $productosVendidosHoy = DetallePedido::select(
+                    'producto_id',
+                    'productos.nombre as producto',
+                    DB::raw('SUM(cantidad) as cantidad_vendida'),
+                    DB::raw('SUM(cantidad * precio_unitario) as total_producto')
+                )
+                ->join('productos', 'detalles_pedido.producto_id', '=', 'productos.id')
+                ->join('pedidos', 'detalles_pedido.pedido_id', '=', 'pedidos.id')
+                ->whereDate('pedidos.fecha_pedido', Carbon::today())
+                ->where('pedidos.estado', 'Entregado')
+                ->groupBy('producto_id', 'productos.nombre')
+                ->get();
+
+            $totalGeneral = $productosVendidosHoy->sum('total_producto');
+            
+        } catch (Exception $e) {
+            $productosVendidosHoy = collect([]);
+            $totalGeneral = 0;
+        }
+
         return view('admin.dashboard', [
-            'total_usuarios' => $total_usuarios,
             'total_productos' => $total_productos,
             'total_ventas' => $total_ventas,
+            'total_clientes' => $total_clientes,
+            'ventas_hoy' => $ventas_hoy,
+            'productosVendidosHoy' => $productosVendidosHoy,
+            'totalGeneral' => $totalGeneral,
         ]);
     }
 
-    // --- Aquí añadiremos luego los métodos para gestionar usuarios, productos, pedidos ---
-    // public function gestionarUsuarios() { ... }
-    // public function gestionarProductos() { ... }
-    // public function gestionarPedidos() { ... }
-    // etc.
-    public function verMensajesSoporte(): View // <-- NEW METHOD
+    public function verMensajesSoporte(): View
     {
-        // Obtenemos todos los mensajes, ordenados por más reciente
-        $mensajes = MensajeSoporte::latest()->get(); // latest() ordena por created_at desc
-        // Alternativa con paginación: ->paginate(20);
-
-        // Pasamos los mensajes a la vista
-        return view('admin.soporte.index', [ // Vista que crearemos
+        $mensajes = MensajeSoporte::latest()->get();
+        return view('admin.soporte.index', [
             'mensajes' => $mensajes
         ]);
     }
-
 }
