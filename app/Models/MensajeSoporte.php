@@ -2,13 +2,8 @@
 
 namespace App\Models;
 
-<<<<<<< HEAD
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-=======
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Importa el trait HasFactory
-use Illuminate\Database\Eloquent\Model; // Importa la clase base Model
->>>>>>> e47cdeb84a46eff582ba89ac4e003f15711ff503
 
 class MensajeSoporte extends Model
 {

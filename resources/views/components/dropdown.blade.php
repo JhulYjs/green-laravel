@@ -25,7 +25,6 @@ $width = match ($width) {
             x-transition:leave="transition ease-in duration-75"
             x-transition:leave-start="opacity-100 scale-100"
             x-transition:leave-end="opacity-0 scale-95"
-<<<<<<< HEAD
             class="absolute z-50 mt-2 {{ $width }} rounded-xl shadow-xl {{ $alignmentClasses }}"
             style="display: none;"
             @click="open = false">
@@ -34,13 +33,3 @@ $width = match ($width) {
         </div>
     </div>
 </div>
-=======
-            class="absolute z-50 mt-2 {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
-            style="display: none;"
-            @click="open = false">
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }}">
-            {{ $content }}
-        </div>
-    </div>
-</div>
->>>>>>> e47cdeb84a46eff582ba89ac4e003f15711ff503

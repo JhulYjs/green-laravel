@@ -1,7 +1,6 @@
 <x-app-layout>
     {{-- No necesitamos un header específico aquí --}}
 
-<<<<<<< HEAD
     <main class="py-24 text-center" style="background: linear-gradient(135deg, #F5F1E6 0%, #E8DFCA 100%);">
         <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-lg sm:rounded-2xl p-12 border-0" style="box-shadow: 0 10px 30px rgba(226, 114, 91, 0.15);">
@@ -27,26 +26,6 @@
                 <a href="{{ route('home') }}"
                    class="inline-block mt-8 px-10 py-4 rounded-full font-bold text-base transition-all duration-300 transform hover:scale-105"
                    style="background: linear-gradient(135deg, #E2725B 0%, #D4A017 100%); color: white; box-shadow: 0 4px 15px rgba(226, 114, 91, 0.4);">
-=======
-    <main class="py-24 text-center">
-        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-12 border border-gray-100">
-                {{-- Icono de éxito --}}
-                <svg class="mx-auto h-16 w-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                
-                <h1 class="text-3xl font-bold text-brand-800 font-serif mt-4">¡Gracias por tu compra!</h1>
-                <p class="text-brand-600 mt-2">Tu pedido ha sido procesado correctamente.</p>
-                <p class="text-sm text-brand-500 mt-4">
-                    Tu número de pedido es: <strong class="text-brand-700">#{{ $pedido->id }}</strong> {{-- Accedemos al ID del pedido --}}
-                </p>
-                <p class="mt-2 text-sm text-brand-500">Recibirás un email con los detalles de tu compra y el seguimiento del envío (funcionalidad pendiente).</p>
-                
-                {{-- Enlace para seguir explorando --}}
-                <a href="{{ route('home') }}" {{-- Usamos el nombre de la ruta de inicio --}}
-                   class="inline-block mt-8 bg-brand-500 text-white px-8 py-3 rounded-full font-semibold text-sm hover:bg-brand-600">
->>>>>>> e47cdeb84a46eff582ba89ac4e003f15711ff503
                     Seguir explorando
                 </a>
             </div>
