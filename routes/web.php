@@ -1,59 +1,60 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProductoController; // Controlador para productos
-use App\Http\Controllers\CarritoController;  // Controlador para carrito
-use App\Http\Controllers\ProfileController;  // Controlador para perfil (de Breeze)
-use App\Http\Controllers\PedidoController;   // Controlador para pedidos
-use App\Http\Controllers\FavoritoController; // Controlador para favoritos
-use App\Http\Controllers\Admin\AdminDashboardController; // Controlador para admin dashboard
-use App\Http\Controllers\Admin\AdminUserController; // Controlador para admin usuarios
-use App\Http\Controllers\Admin\AdminProductoController; // Controlador para admin productos
-use App\Http\Controllers\Admin\AdminPedidoController; // Controlador para admin pedidos
-use App\Http\Controllers\SoporteController; // Controlador para soporte
-use App\Http\Controllers\HomeController; // Controlador para páginas estáticas como "Sobre Nosotros"
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\CarritoController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminProductoController;
+use App\Http\Controllers\Admin\AdminPedidoController;
+use App\Http\Controllers\SoporteController;
+use App\Http\Controllers\HomeController;
 
+// ========== RUTAS PÚBLICAS ==========
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-// Ruta principal (Index)
-Route::get('/', [HomeController::class, 'showHome'])->name('home');
-
-Route::get('/coleccion', [ProductoController::class, 'index'])->name('coleccion'); // Ruta para la colección de productos
-
-// Ruta para detalles de un producto
+Route::get('/', [HomeController::class, 'showHome'])->name('home.main');
+Route::get('/coleccion', [ProductoController::class, 'index'])->name('coleccion');
 Route::get('/producto/{producto}', [ProductoController::class, 'show'])->name('producto.show');
-
 Route::get('/sobre-nosotros', [HomeController::class, 'sobreNosotros'])->name('sobre-nosotros');
-
 Route::get('/ofertas', [ProductoController::class, 'ofertas'])->name('ofertas');
-
-// --- AÑADE ESTAS RUTAS PARA SOPORTE ---
 Route::get('/soporte', [SoporteController::class, 'index'])->name('soporte.index');
 Route::post('/soporte', [SoporteController::class, 'procesar'])->name('soporte.procesar');
-// ------------------------------------
 
-// Rutas de Breeze para autenticación (login, register, etc.)
-// Estas rutas están definidas en routes/auth.php
 require __DIR__.'/auth.php';
 
-// Rutas que requieren que el usuario esté autenticado
+// ========== RUTAS AUTENTICADAS ==========
 Route::middleware('auth')->group(function () {
-    // Dashboard estándar de Breeze (redirige aquí después de login/register)
+    // DASHBOARD - DIFERENTE PARA CADA TIPO DE USUARIO
     Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware(['verified'])->name('dashboard'); // 'verified' es para verificación de email (opcional)
+        $user = Auth::user();
+        
+        \Log::info("Acceso a /dashboard - Usuario: {$user->email}, Rol: {$user->rol}");
+        
+        // ADMIN ve dashboard con estadísticas
+        if ($user->rol === 'admin') {
+            return view('dashboard'); // ← dashboard.blade.php con panel admin
+        }
+        
+        // USUARIO NORMAL ve dashboard simple
+        return view('home-user'); // ← home-user.blade.php simple
+    })->name('dashboard');
 
-    // Rutas del Perfil (generadas por Breeze)
+    // Ruta HOME (redirige al dashboard)
+    Route::get('/home', function () {
+        return redirect()->route('dashboard');
+    })->name('home');
+
+    // PERFIL
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -85,7 +86,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PedidoController::class, 'index'])->name('index');
         Route::get('/{pedido}', [PedidoController::class, 'show'])->name('show');
     });
-
 });
 
 // ========== RUTAS DEL PANEL DE ADMINISTRACIÓN ==========
@@ -117,4 +117,3 @@ Route::middleware(['auth', \App\Http\Middleware\CheckAdminRole::class])
 
     Route::get('/soporte', [AdminDashboardController::class, 'verMensajesSoporte'])->name('soporte.index');
 });
-// ======================================================

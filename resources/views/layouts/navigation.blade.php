@@ -10,16 +10,21 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        {{-- CAMBIA route('home') a route('coleccion') --}}
-                        <x-nav-link :href="route('coleccion')" :active="request()->routeIs('coleccion')"> 
-                            {{ __('Colección') }}
-                        </x-nav-link>
+                    {{-- === ENLACE HOME - SOLO PARA ADMINS === --}}
+                    @if (Auth::check() && Auth::user()->rol === 'admin')
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                        {{ __('Home') }}
+                    </x-nav-link>
+                    @endif
+                    {{-- ==================================== --}}
 
-                    {{-- === AÑADE OFERTAS === --}}
+                    <x-nav-link :href="route('coleccion')" :active="request()->routeIs('coleccion')"> 
+                        {{ __('Colección') }}
+                    </x-nav-link>
+
                     <x-nav-link :href="route('ofertas')" :active="request()->routeIs('ofertas')">
                         {{ __('Ofertas') }}
                     </x-nav-link>
-                    {{-- ===================== --}}
 
                     @auth 
                     <x-nav-link :href="route('favoritos.index')" :active="request()->routeIs('favoritos.index')">
@@ -27,11 +32,9 @@
                     </x-nav-link>
                     @endauth
 
-                     {{-- === AÑADE SOBRE NOSOTROS === --}}
                     <x-nav-link :href="route('sobre-nosotros')" :active="request()->routeIs('sobre-nosotros')">
                         {{ __('Sobre Nosotros') }}
                     </x-nav-link>
-                    {{-- ========================== --}}
 
                     <x-nav-link :href="route('soporte.index')" :active="request()->routeIs('soporte.index')">
                         {{ __('Soporte') }}
@@ -123,14 +126,33 @@
 
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            {{-- === HOME EN MÓVIL === --}}
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                {{ __('Home') }}
+            </x-responsive-nav-link>
+            {{-- ============================ --}}
+            
+            <x-responsive-nav-link :href="route('coleccion')" :active="request()->routeIs('coleccion')">
                 {{ __('Colección') }}
             </x-responsive-nav-link>
+            
+            <x-responsive-nav-link :href="route('ofertas')" :active="request()->routeIs('ofertas')">
+                {{ __('Ofertas') }}
+            </x-responsive-nav-link>
+            
              @auth
              <x-responsive-nav-link :href="route('favoritos.index')" :active="request()->routeIs('favoritos.index')">
                  {{ __('Favoritos') }}
              </x-responsive-nav-link>
              @endauth
+             
+             <x-responsive-nav-link :href="route('sobre-nosotros')" :active="request()->routeIs('sobre-nosotros')">
+                 {{ __('Sobre Nosotros') }}
+             </x-responsive-nav-link>
+             
+             <x-responsive-nav-link :href="route('soporte.index')" :active="request()->routeIs('soporte.index')">
+                 {{ __('Soporte') }}
+             </x-responsive-nav-link>
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200">
@@ -141,9 +163,25 @@
             </div>
 
             <div class="mt-3 space-y-1">
+                {{-- PANEL DE ADMIN EN MÓVIL (SOLO PARA ADMINS) --}}
+                @if (Auth::user()->rol === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')">
+                    {{ __('Panel de Administración') }}
+                </x-responsive-nav-link>
+                @endif
+
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Mi Perfil') }}
                 </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('mis-prendas.index')">
+                    {{ __('Mis Prendas') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('mis-pedidos.index')">
+                    {{ __('Mis Pedidos') }}
+                </x-responsive-nav-link>
+
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <x-responsive-nav-link :href="route('logout')"
