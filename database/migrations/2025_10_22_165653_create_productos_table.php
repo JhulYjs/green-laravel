@@ -44,7 +44,7 @@ return new class extends Migration
             $table->index('fecha_creacion');
             
             // Índice FULLTEXT
-            $table->fullText(['nombre', 'descripcion'], 'idx_fulltext_busqueda');
+            $table->index(['nombre'], 'idx_nombre_productos');
         });
     }
     /**
