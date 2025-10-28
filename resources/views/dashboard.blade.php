@@ -76,7 +76,9 @@
                                 <span class="text-2xl">❤️</span>
                             </div>
                             <div>
-                                <h3 class="text-3xl font-bold text-gray-900">6</h3>
+                                <h3 class="text-3xl font-bold text-gray-900">
+                                    {{ Auth::user()->favoritos->count() }}
+                                </h3>
                                 <p class="text-gray-600">Mis Favoritos</p>
                             </div>
                         </div>
