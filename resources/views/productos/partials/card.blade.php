@@ -49,11 +49,11 @@
         <div class="mb-4">
             @if ($producto->precio_oferta)
                 <div class="flex items-center space-x-3">
-                    <span class="font-bold text-2xl text-red-600">${{ number_format($producto->precio_oferta, 2) }}</span>
-                    <span class="text-lg text-gray-400 line-through">${{ number_format($producto->precio, 2) }}</span>
+                    <span class="font-bold text-2xl text-red-600">S/{{ number_format($producto->precio_oferta, 2) }}</span>
+                    <span class="text-lg text-gray-400 line-through">S/{{ number_format($producto->precio, 2) }}</span>
                 </div>
             @else
-                <span class="font-bold text-2xl text-emerald-600">${{ number_format($producto->precio, 2) }}</span>
+                <span class="font-bold text-2xl text-emerald-600">S/{{ number_format($producto->precio, 2) }}</span>
             @endif
         </div>
         

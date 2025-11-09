@@ -60,16 +60,6 @@
                             </div>
                             <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-800 font-serif mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">Nuestra Colección</h1>
                             <p class="text-gray-600 mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-lg leading-relaxed px-2">Descubre prendas únicas con historia y estilo sostenible</p>
-                            
-                            {{-- Contador RESPONSIVE --}}
-                            <div class="mt-4 sm:mt-6 inline-flex items-center bg-white px-3 py-1 sm:px-4 sm:py-2 rounded-full shadow-sm border border-gray-200 text-xs sm:text-sm">
-                                <svg class="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
-                                </svg>
-                                <span class="font-semibold text-gray-700">
-                                    <span id="product-count">{{ $productos->count() }}</span> prendas
-                                </span>
-                            </div>
                         </div>
 
                         {{-- Layout FLEX con Sidebar y Grid --}}

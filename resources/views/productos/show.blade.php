@@ -58,10 +58,10 @@
                                     {{-- Precio y Estado --}}
                                     <div class="flex items-center mt-4 space-x-4">
                                         @if ($producto->precio_oferta)
-                                            <span class="font-bold text-4xl text-red-600">${{ number_format($producto->precio_oferta, 2) }}</span>
-                                            <span class="text-2xl text-gray-400 line-through">${{ number_format($producto->precio, 2) }}</span>
+                                            <span class="font-bold text-4xl text-red-600">S/{{ number_format($producto->precio_oferta, 2) }}</span>
+                                            <span class="text-2xl text-gray-400 line-through">S/{{ number_format($producto->precio, 2) }}</span>
                                         @else
-                                            <span class="font-bold text-4xl text-emerald-600">${{ number_format($producto->precio, 2) }}</span>
+                                            <span class="font-bold text-4xl text-emerald-600">S/{{ number_format($producto->precio, 2) }}</span>
                                         @endif
                                         <span class="text-sm font-bold bg-gradient-to-r from-amber-500 to-orange-500 text-white px-4 py-2 rounded-full shadow-lg">
                                             {{ $producto->estado }}

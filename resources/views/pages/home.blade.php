@@ -1,5 +1,4 @@
 <x-app-layout>
-    /*no se esta usando*/
     <main class="flex-grow">
         {{-- Sección Hero MEJORADA --}}
         <section class="text-center py-16 lg:py-28 px-4 bg-gradient-to-br from-white via-emerald-50 to-teal-50 relative overflow-hidden">

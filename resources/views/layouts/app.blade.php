@@ -62,6 +62,7 @@
                 <p class="text-gray-500">Cargando carrito...</p>
             </div>
         </div>
+        
         {{-- === FIN HTML DEL CARRITO === --}}
 
 

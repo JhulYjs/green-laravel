@@ -1,6 +1,37 @@
 // resources/js/carrito.js
 console.log("¡Carrito.js cargado!"); // Log inicial
 
+// Función para alertas bonitas
+function showCustomAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 z-50 max-w-sm w-full p-4 rounded-lg shadow-lg border-l-4 transform transition-all duration-300 ${
+        type === 'success' 
+            ? 'bg-green-50 border-green-500 text-green-700' 
+            : 'bg-red-50 border-red-500 text-red-700'
+    }`;
+    
+    alertDiv.innerHTML = `
+        <div class="flex items-center">
+            <span class="text-lg mr-3">${type === 'success' ? '✅' : '⚠️'}</span>
+            <div class="flex-1">
+                <p class="font-medium">${type === 'success' ? '¡Éxito!' : 'Error'}</p>
+                <p class="text-sm mt-1">${message}</p>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-gray-500 hover:text-gray-700">
+                ×
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        if (alertDiv.parentElement) {
+            alertDiv.remove();
+        }
+    }, 4000);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM cargado, iniciando carrito..."); // Log después de cargar el DOM
 
@@ -117,7 +148,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>`;
             });
         }
-
         cartPanel.innerHTML = `
             <div class="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
                 <h2 class="text-lg font-semibold text-gray-800">Mi Carrito</h2>
@@ -221,12 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (response.ok && result.status === 'success') {
                     // ¡Éxito!
-
                     showCustomAlert(result.message, 'success');
-                    fetchCartItems();
-                    
-                    
-                    // <--- RECARGA EL CARRITO DESPUÉS DE AÑADIR
+                    fetchCartItems();  // <--- RECARGA EL CARRITO DESPUÉS DE AÑADIR
                 } else {
                      console.error("Error en la respuesta del servidor:", result);
                      if(response.status === 401 || response.status === 403) {
