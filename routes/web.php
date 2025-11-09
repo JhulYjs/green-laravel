@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // agregada para evitar 'Undefined type Log'
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\ProfileController;
@@ -38,7 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user();
         
-        \Log::info("Acceso a /dashboard - Usuario: {$user->email}, Rol: {$user->rol}");
+    Log::info("Acceso a /dashboard - Usuario: {$user->email}, Rol: {$user->rol}");
         
         // ADMIN ve dashboard con estadísticas
         if ($user->rol === 'admin') {
@@ -86,6 +87,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [PedidoController::class, 'index'])->name('index');
         Route::get('/{pedido}', [PedidoController::class, 'show'])->name('show');
     });
+
+    
 });
 
 // ========== RUTAS DEL PANEL DE ADMINISTRACIÓN ==========

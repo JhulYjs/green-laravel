@@ -40,6 +40,7 @@
                         {{ $header }}
                     </div>
                 </header>
+
             @endisset
 
             <!-- Page Content -->
@@ -74,7 +75,7 @@
                 {{-- Encabezado del Modal --}}
                 <div class="flex items-center justify-between p-5 border-b border-gray-100 bg-white sticky top-0 z-10">
                     <div>
-                        {{-- CAMBIO 3.1: Fuente y color para el título del modal --}}
+                     {{-- CAMBIO 3.1: Fuente y color para el título del modal --}}
                         <h2 class="text-2xl font-bold text-gray-900">Finalizar Compra</h2>
                         <p class="text-gray-500 mt-1 text-sm">Completa tu información para recibir tus prendas</p>
                     </div>
@@ -148,7 +149,11 @@
                 </div>
 
             </div>
+            
+
         </div>
+
+
         {{-- === FIN HTML DEL CHECKOUT MODAL === --}}
         
         <x-footer />       
