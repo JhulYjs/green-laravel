@@ -49,161 +49,189 @@
                 {{-- Contenido de la Colección --}}
                 <div class="py-12">
                     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                        {{-- Título de la sección --}}
-                        <div class="text-center mb-12">
-                            <p class="text-sm uppercase tracking-wider text-brand-500">Moda Circular</p>
-                            <h1 class="text-4xl md:text-5xl font-bold text-brand-800 font-serif mt-2">Nuestra Colección</h1>
-                            <p class="text-brand-600 mt-4 max-w-2xl mx-auto">Descubre prendas únicas con historia.</p>
+
+                        {{-- Título RESPONSIVE --}}
+                        <div class="text-center mb-8 sm:mb-12 px-4 sm:px-0">
+                            <div class="inline-flex items-center bg-gradient-to-r from-emerald-50 to-teal-50 px-4 py-2 sm:px-6 sm:py-3 rounded-xl sm:rounded-2xl mb-3 sm:mb-4 border border-emerald-100">
+                                <svg class="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9"/>
+                                </svg>
+                                <span class="text-xs sm:text-sm uppercase tracking-wider text-emerald-600 font-semibold">Moda Circular</span>
+                            </div>
+                            <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-800 font-serif mt-2 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">Nuestra Colección</h1>
+                            <p class="text-gray-600 mt-3 sm:mt-4 max-w-2xl mx-auto text-sm sm:text-lg leading-relaxed px-2">Descubre prendas únicas con historia y estilo sostenible</p>
+                            
+                            {{-- Contador RESPONSIVE --}}
+                            <div class="mt-4 sm:mt-6 inline-flex items-center bg-white px-3 py-1 sm:px-4 sm:py-2 rounded-full shadow-sm border border-gray-200 text-xs sm:text-sm">
+                                <svg class="w-3 h-3 sm:w-4 sm:h-4 text-emerald-500 mr-1 sm:mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                                </svg>
+                                <span class="font-semibold text-gray-700">
+                                    <span id="product-count">{{ $productos->count() }}</span> prendas
+                                </span>
+                            </div>
                         </div>
 
                         {{-- Layout FLEX con Sidebar y Grid --}}
                         <div class="flex flex-col lg:flex-row gap-8 mt-8">
 
-                        {{-- Sidebar de Filtros MEJORADO --}}
-                        <aside class="w-full lg:w-80 flex-shrink-0">
-                            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg sticky top-24">
-                                {{-- Header de filtros --}}
-                                <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
-                                    <h3 class="font-bold text-xl text-gray-800">Filtros</h3>
-                                    <div class="w-8 h-8 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {{-- Sidebar de Filtros MEJORADO --}}
+                            <aside class="w-full lg:w-80 flex-shrink-0">
+                                  {{-- Botón para mostrar/ocultar filtros en móviles --}}
+                                <div class="lg:hidden mb-4">
+                                    <button id="filters-toggle" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 font-semibold text-gray-700 flex items-center justify-center shadow-sm hover:shadow-md transition-all">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
                                         </svg>
-                                    </div>
-                                </div>
-
-                                {{-- Búsqueda --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                        </svg>
-                                        Buscar prendas
-                                    </label>
-                                    <div class="relative">
-                                        <input type="text" id="search-input" name="busqueda" placeholder="¿Qué estás buscando?"
-                                            class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                {{-- Categoría --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                                        </svg>
-                                        Categoría
-                                    </label>
-                                    <select name="categoria" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                        <option value="">Todas las categorías</option>
-                                        @foreach ($categorias ?? [] as $cat)
-                                        <option value="{{ $cat->id }}">{{ $cat->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                {{-- Precio --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
-                                        </svg>
-                                        Rango de precio
-                                    </label>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="relative">
-                                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">S/</span>
-                                            <input type="number" name="precio_min" placeholder="Mín"
-                                                class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 pl-8 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200" min="0" step="0.01">
+                                        Mostrar/Ocultar Filtros
+                                    </button>
+                                </div> 
+                            
+                                    {{-- Contenedor de filtros --}}
+                                    <div id="filters-container" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-lg sticky top-24 hidden lg:block">                                        
+                                    {{-- Header de filtros --}}
+                                        <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-100">
+                                            <h3 class="font-bold text-xl text-gray-800">Filtros</h3>
+                                            <div class="w-8 h-8 bg-gradient-to-r from-emerald-100 to-teal-100 rounded-full flex items-center justify-center">
+                                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
+                                                </svg>
+                                            </div>
                                         </div>
-                                        <div class="relative">
-                                            <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">S/</span>
-                                            <input type="number" name="precio_max" placeholder="Máx"
-                                                class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 pl-8 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200" min="0" step="0.01">
+
+                                        {{-- Búsqueda --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                                </svg>
+                                                Buscar prendas
+                                            </label>
+                                            <div class="relative">
+                                                <input type="text" id="search-input" name="busqueda" placeholder="¿Qué estás buscando?"
+                                                    class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pl-10 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                                </svg>
+                                            </div>
                                         </div>
+
+                                        {{-- Categoría --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                                </svg>
+                                                Categoría
+                                            </label>
+                                            <select name="categoria" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                                <option value="">Todas las categorías</option>
+                                                @foreach ($categorias ?? [] as $cat)
+                                                <option value="{{ $cat->id }}">{{ $cat->nombre }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        {{-- Precio --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                                                </svg>
+                                                Rango de precio
+                                            </label>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <div class="relative">
+                                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">S/</span>
+                                                    <input type="number" name="precio_min" placeholder="Mín"
+                                                        class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 pl-8 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200" min="0" step="0.01">
+                                                </div>
+                                                <div class="relative">
+                                                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm">S/</span>
+                                                    <input type="number" name="precio_max" placeholder="Máx"
+                                                        class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-3 pl-8 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200" min="0" step="0.01">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Talla --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                                </svg>
+                                                Talla
+                                            </label>
+                                            <select name="talla" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                                <option value="">Todas las tallas</option>
+                                                <option value="XS">XS</option>
+                                                <option value="S">S</option>
+                                                <option value="M">M</option>
+                                                <option value="L">L</option>
+                                                <option value="XL">XL</option>
+                                                <option value="Única">Única</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- Estado --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                Estado
+                                            </label>
+                                            <select name="estado" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                                <option value="">Todos los estados</option>
+                                                <option value="Nuevo">Nuevo</option>
+                                                <option value="Como nuevo">Como nuevo</option>
+                                                <option value="Buen estado">Buen estado</option>
+                                                <option value="Usado">Usado</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- Ordenar --}}
+                                        <div class="mb-6">
+                                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/>
+                                                </svg>
+                                                Ordenar por
+                                            </label>
+                                            <select name="orden" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                                <option value="fecha_desc">Más recientes</option>
+                                                <option value="precio_asc">Precio: menor a mayor</option>
+                                                <option value="precio_desc">Precio: mayor a menor</option>
+                                                <option value="nombre_asc">Nombre A-Z</option>
+                                            </select>
+                                        </div>
+
+                                        {{-- Botón limpiar --}}
+                                        <button id="clear-filters-button" class="w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold text-sm hover:from-gray-200 hover:to-gray-300 transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                            </svg>
+                                            Limpiar Filtros
+                                        </button>
                                     </div>
-                                </div>
+                            </aside>
 
-                                {{-- Talla --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                        </svg>
-                                        Talla
-                                    </label>
-                                    <select name="talla" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                        <option value="">Todas las tallas</option>
-                                        <option value="XS">XS</option>
-                                        <option value="S">S</option>
-                                        <option value="M">M</option>
-                                        <option value="L">L</option>
-                                        <option value="XL">XL</option>
-                                        <option value="Única">Única</option>
-                                    </select>
-                                </div>
-
-                                {{-- Estado --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                        </svg>
-                                        Estado
-                                    </label>
-                                    <select name="estado" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                        <option value="">Todos los estados</option>
-                                        <option value="Nuevo">Nuevo</option>
-                                        <option value="Como nuevo">Como nuevo</option>
-                                        <option value="Buen estado">Buen estado</option>
-                                        <option value="Usado">Usado</option>
-                                    </select>
-                                </div>
-
-                                {{-- Ordenar --}}
-                                <div class="mb-6">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
-                                        <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4"/>
-                                        </svg>
-                                        Ordenar por
-                                    </label>
-                                    <select name="orden" class="filter-input w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                        <option value="fecha_desc">Más recientes</option>
-                                        <option value="precio_asc">Precio: menor a mayor</option>
-                                        <option value="precio_desc">Precio: mayor a menor</option>
-                                        <option value="nombre_asc">Nombre A-Z</option>
-                                    </select>
-                                </div>
-
-                                {{-- Botón limpiar --}}
-                                <button id="clear-filters-button" class="w-full bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-3 px-4 rounded-xl font-semibold text-sm hover:from-gray-200 hover:to-gray-300 transition-all duration-300 transform hover:-translate-y-0.5 shadow-md hover:shadow-lg flex items-center justify-center">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                    </svg>
-                                    Limpiar Filtros
-                                </button>
-                            </div>
-                        </aside>
-
-                            {{-- Grid de Productos (Contenedor principal) --}}
+                            {{-- Grid de Productos MEJORADO --}}
                             <div class="flex-1">
-                                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                                    <div class="p-6 text-gray-900">
-                                        {{-- Contenedor para la rejilla (para AJAX) --}}
+                                <div class="bg-transparent">
+                                    <div class="text-gray-900">
+                                        {{-- Contenedor para la rejilla --}}
                                         <div id="product-grid-container">
-                                             {{-- Incluimos la vista parcial del grid --}}
-                                             {{-- La variable $productos viene del ProductoController@index --}}
                                             @include('productos.partials.grid', ['productos' => $productos])
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                        </div> {{-- Fin Layout Flex --}}
+                        </div> 
+                        
+                        {{-- Fin Layout Flex --}}
+                        
                     </div>
                 </div>
             </main>
@@ -266,4 +294,36 @@
         </div>
 
     </body>
+    <script>
+// Toggle de filtros en móviles
+document.addEventListener('DOMContentLoaded', function() {
+    const filtersToggle = document.getElementById('filters-toggle');
+    const filtersContainer = document.getElementById('filters-container');
+    
+    if (filtersToggle && filtersContainer) {
+        filtersToggle.addEventListener('click', function() {
+            filtersContainer.classList.toggle('hidden');
+            filtersContainer.classList.toggle('block');
+            
+            // Cambiar icono/texto
+            const icon = filtersToggle.querySelector('svg');
+            if (filtersContainer.classList.contains('hidden')) {
+                filtersToggle.innerHTML = `
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
+                    </svg>
+                    Mostrar Filtros
+                `;
+            } else {
+                filtersToggle.innerHTML = `
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                    Ocultar Filtros
+                `;
+            }
+        });
+    }
+});
+</script>
 </html>

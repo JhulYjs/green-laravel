@@ -15,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Log para verificar si el botón de abrir carrito fue encontrado
     console.log("Botón para abrir carrito encontrado:", openCartButton);
 
+
+    
     // --- Funciones para abrir/cerrar el panel ---
     function openSideCart() {
         // Log para verificar si se llama a la función
@@ -219,8 +221,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (response.ok && result.status === 'success') {
                     // ¡Éxito!
-                    alert(result.message);
-                    fetchCartItems(); // <--- RECARGA EL CARRITO DESPUÉS DE AÑADIR
+
+                    showCustomAlert(result.message, 'success');
+                    fetchCartItems();
+                    
+                    
+                    // <--- RECARGA EL CARRITO DESPUÉS DE AÑADIR
                 } else {
                      console.error("Error en la respuesta del servidor:", result);
                      if(response.status === 401 || response.status === 403) {
