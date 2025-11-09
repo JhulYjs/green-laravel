@@ -151,6 +151,6 @@
         </div>
         {{-- === FIN HTML DEL CHECKOUT MODAL === --}}
         
-        <x-footer />
+        <x-footer />       
     </body>
 </html>
