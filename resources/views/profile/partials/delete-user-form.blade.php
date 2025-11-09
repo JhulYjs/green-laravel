@@ -76,3 +76,4 @@
         </form>
     </x-modal>
 </section>
+<!-- Cambio de estilos por Joha -->

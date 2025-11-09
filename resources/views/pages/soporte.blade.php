@@ -181,3 +181,4 @@
         </div>
     </div>
 </x-app-layout>
+<!-- Cambio de estilos por Joha -->

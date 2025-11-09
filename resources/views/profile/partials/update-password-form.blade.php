@@ -60,3 +60,4 @@
         </div>
     </form>
 </section>
+<!-- Cambio de estilos por Joha -->

@@ -317,3 +317,4 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 </html>
+<!-- Cambio de estilos por Joha -->

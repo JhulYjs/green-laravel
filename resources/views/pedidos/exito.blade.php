@@ -32,3 +32,4 @@
         </div>
     </main>
 </x-app-layout>
+<!-- Cambio de estilos por Joha -->

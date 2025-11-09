@@ -190,3 +190,4 @@
         });
     </script>
 </x-app-layout>
+<!-- Cambio de estilos por Joha -->

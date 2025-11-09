@@ -180,3 +180,4 @@
         </section>
     </main>
 </x-app-layout>
+<!-- Cambio de estilos por Joha -->

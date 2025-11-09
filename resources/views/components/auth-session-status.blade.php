@@ -5,3 +5,4 @@
         {{ $status }}
     </div>
 @endif
+<!-- Cambio de estilos por Joha -->

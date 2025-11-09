@@ -33,3 +33,4 @@ $width = match ($width) {
         </div>
     </div>
 </div>
+<!-- Cambio de estilos por Joha -->

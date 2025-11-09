@@ -160,3 +160,4 @@
         <x-footer />       
     </body>
 </html>
+<!-- Cambio de estilos por Joha -->

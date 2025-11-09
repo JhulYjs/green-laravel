@@ -195,3 +195,4 @@
         }
     </style>
 </x-app-layout>
+<!-- Cambio de estilos por Joha -->
