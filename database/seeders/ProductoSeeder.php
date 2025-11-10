@@ -26,7 +26,7 @@ class ProductoSeeder extends Seeder
                 'nombre' => 'Blazer Lino Orgánico Alma Verde',
                 'descripcion' => 'Blazer oversize de lino orgánico teñido con pigmentos naturales. Una pieza atemporal y versátil.',
                 'precio' => 129.00, 'precio_oferta' => null, 'talla' => 'M',
-                'estado' => 'Como nuevo', 'imagen_url' => 'uploads/products/placeholder_blazer.png', 
+                'estado' => 'Como nuevo', 'imagen_url' => 'https://media.falabella.com/falabellaCL/17128233_1/w=800,h=800,fit=pad', 
                 'categoria_nombre' => 'Chaquetas'
             ],
             [

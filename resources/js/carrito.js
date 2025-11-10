@@ -157,12 +157,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${itemsHTML}
             </div>
             ${ (items && items.length > 0) ? `
-            <div class="p-4 border-t border-gray-200 bg-white flex-shrink-0">
+            <div class="p-4 border-t border-gray-200 bg-w flex-shrink-0">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-md font-semibold text-gray-700">Subtotal:</span>
                     <span class="text-xl font-bold text-gray-800">$${subtotal.toFixed(2)}</span>
                 </div>
-                <button id="go-to-checkout-from-cart" class="w-full text-center bg-brand-500 text-white py-3 rounded-md font-bold hover:bg-brand-600 transition">
+                <button id="go-to-checkout-from-cart" class="w-full text-center bg-brand-500 text-black py-3 rounded-md font-bold hover:bg-brand-600 transition">
                     Finalizar Compra
                 </button>
             </div>

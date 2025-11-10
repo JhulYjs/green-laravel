@@ -100,25 +100,40 @@
                 <div class="mb-6">
                     <h3 class="text-sm font-bold text-brand-700 mb-2">Imagen Actual</h3>
                     
-                    {{-- === LÓGICA DE RUTA CORREGIDA === --}}
-                    @php
-                        $imagePath = $producto->imagen_url;
-                        // Si la ruta contiene 'uploads/', asumimos que es una imagen de seeder (en /public/uploads).
-                        // Si no, o si es una subida de admin, asumimos que debe ir vía 'storage'.
-                        $finalUrl = str_starts_with($imagePath, 'uploads/') 
-                            ? asset($imagePath) 
-                            : asset('storage/' . $imagePath);
-                    @endphp
-                    
-                   <img src="{{ asset('storage/' . $producto->imagen_url) }}" alt="Imagen actual" class="w-24 h-auto rounded-lg border">
-                    {{-- ================================ --}}
-                </div>
+                    {{-- Imagen Actual --}}
+                    <div class="mb-6">
+                        <h3 class="text-sm font-bold text-brand-700 mb-2">Imagen Actual</h3>
 
-                <div class="mt-8 border-t border-brand-100 pt-6">
-                    <x-primary-button type="submit" class="!w-auto !bg-brand-600 hover:!bg-brand-700 !text-sm !px-8">
-                        Guardar Cambios
-                    </x-primary-button>
-                </div>
+                        @php
+                            $imagePath = $producto->imagen_url ?? '';
+
+                            // Asegurar que no empiece con una barra
+                            $imagePath = ltrim($imagePath, '/');
+
+                            // Determinar la URL final
+                            if (file_exists(public_path($imagePath))) {
+                                // Si el archivo existe en /public/uploads o similar
+                                $finalUrl = asset($imagePath);
+                            } elseif (file_exists(storage_path('app/public/' . $imagePath))) {
+                                // Si existe en /storage/app/public/
+                                $finalUrl = asset('storage/' . $imagePath);
+                            } else {
+                                // Imagen por defecto
+                                $finalUrl = asset('images/placeholder.png');
+                            }
+                        @endphp
+
+                        {{-- Mostrar solo una imagen válida --}}
+                        <img src="{{ $finalUrl }}" 
+                            alt="{{ $producto->nombre }}" 
+                            class="w-48 h-auto rounded-lg border shadow-sm">
+                    </div>
+
+                    <div class="mt-8 border-t border-brand-100 pt-6">
+                        <x-primary-button type="submit" class="!w-auto !bg-brand-600 hover:!bg-brand-700 !text-sm !px-8">
+                            Guardar Cambios
+                        </x-primary-button>
+                    </div>
             </form>
         </div>
     </div>
