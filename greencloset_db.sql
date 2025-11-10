@@ -290,9 +290,9 @@ CREATE TABLE `pedidos` (
 --
 
 INSERT INTO `pedidos` (`id`, `usuario_id`, `total`, `direccion_envio`, `fecha_pedido`, `estado`) VALUES
-(1, NULL, 267.99, 'Dirección: Jhul Dalens Gonzales\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51941715545', '2025-10-23 22:38:15', 'Procesando'),
-(2, NULL, 114.00, 'Dirección: Jhul Dalens Gonzales\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51941715545', '2025-10-23 22:41:27', 'Procesando'),
-(3, NULL, 79.99, 'Dirección: Jhul Dalens Gonzales\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51941715545', '2025-10-23 22:42:39', 'Entregado'),
+(1, NULL, 267.99, 'Dirección: shadow\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51999999999', '2025-10-23 22:38:15', 'Procesando'),
+(2, NULL, 114.00, 'Dirección: shadow\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51999999999', '2025-10-23 22:41:27', 'Procesando'),
+(3, NULL, 79.99, 'Dirección: shadow\nCiudad: Cusco\nCódigo Postal: 08000\nTeléfono: +51999999999', '2025-10-23 22:42:39', 'Entregado'),
 (4, 8, 158.98, 'Dirección: cusco\nCiudad: Cusco\nCódigo Postal: 3234656\nTeléfono: 95466546546456456', '2025-10-24 09:03:45', 'Procesando'),
 (5, NULL, 69.99, 'Dirección: aE21231\nCiudad: Cusco\nCódigo Postal: 3234656\nTeléfono: 95466546546456456', '2025-10-24 09:04:27', 'Entregado');
 
