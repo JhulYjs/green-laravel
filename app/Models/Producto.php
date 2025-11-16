@@ -25,6 +25,9 @@ class Producto extends Model
         'imagen_url',
         'categoria_id',
         'usuario_id',
+        'estado_aprobacion',
+        'fecha_aprobacion',
+        'motivo_rechazo',
     ];
 
     /**
@@ -46,4 +49,41 @@ class Producto extends Model
         'precio_oferta' => 'decimal:2',       // Optional: Cast prices too for consistency
         'precio_final' => 'decimal:2',        // Optional: Cast prices too for consistency
     ];                                           // <-- END ADDITION
+
+    //MÉTODOS NUEVOS
+    public function estaPendiente(): bool
+    {
+        return $this->estado_aprobacion === 'pendiente';
+    }
+
+    public function estaAprobado(): bool
+    {
+        return $this->estado_aprobacion === 'aprobado';
+    }
+
+    public function estaRechazado(): bool
+    {
+        return $this->estado_aprobacion === 'rechazado';
+    }
+
+    public function scopeAprobados($query)
+    {
+        return $query->where('estado_aprobacion', 'aprobado');
+    }
+
+    public function scopePendientes($query)
+    {
+        return $query->where('estado_aprobacion', 'pendiente');
+    }
+
+    public function scopeRechazados($query)
+    {
+        return $query->where('estado_aprobacion', 'rechazado');
+    }
+
+    public function scopeRecientesAprobados($query, $dias = 7)
+    {
+        return $query->aprobados()
+                    ->where('fecha_aprobacion', '>=', now()->subDays($dias));
+    }
 }

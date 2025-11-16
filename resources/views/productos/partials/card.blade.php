@@ -1,5 +1,5 @@
 {{-- resources/views/productos/partials/card.blade.php --}}
-<div class="group bg-white rounded-2xl border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col overflow-hidden"
+<div class="group bg-white rounded-2xl border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col overflow-hidden h-full"
      data-id="{{ $producto->id }}"
      data-nombre="{{ $producto->nombre }}"
      data-precio="{{ $producto->precio_final }}"
@@ -18,7 +18,7 @@
             @endphp
 
             <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}"
-                 class="w-full h-80 object-cover transition-transform duration-500 group-hover:scale-110">
+                 class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
         </a>
         
         {{-- Offer tag --}}
@@ -38,9 +38,9 @@
     </div>
 
     {{-- Content container --}}
-    <div class="p-6 flex flex-col flex-grow">
+    <div class="p-5 flex flex-col flex-grow">
         {{-- Product Name --}}
-        <h3 class="font-bold text-gray-800 text-lg h-14 line-clamp-2 leading-tight mb-3">{{ $producto->nombre }}</h3>
+        <h3 class="font-bold text-gray-800 text-lg line-clamp-2 leading-tight mb-3 min-h-[3.5rem]">{{ $producto->nombre }}</h3>
         
         {{-- Spacer --}}
         <div class="flex-grow"></div>
@@ -58,7 +58,7 @@
         </div>
         
         {{-- Size and Condition --}}
-        <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center justify-between mb-4">
             <span class="inline-flex items-center bg-gradient-to-r from-blue-50 to-cyan-50 px-3 py-1 rounded-full text-blue-700 font-semibold text-sm">
                 📏 {{ $producto->talla }}
             </span>

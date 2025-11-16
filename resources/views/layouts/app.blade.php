@@ -35,7 +35,7 @@
 
             <!-- Page Heading (Encabezado de Página) -->
             @isset($header)
-                <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-40">
+                <header class="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-30">
                     <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

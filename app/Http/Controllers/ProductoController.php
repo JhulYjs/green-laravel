@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage; // Para manejar archivos (eliminar imagen)
 use Illuminate\Validation\Rule; // Para reglas de validación
 use Illuminate\View\View;  // Importar View
+use Illuminate\Http\RedirectResponse as IlluminateRedirectResponse;
 
 class ProductoController extends Controller
 {
@@ -65,6 +66,8 @@ class ProductoController extends Controller
     private function filterProducts(Request $request, bool $soloOfertas = false)
     {
         $query = Producto::query()->with('usuario'); // Empezamos la consulta, cargamos vendedor
+
+        $query->aprobados(); //productos aprobados
 
         // Aplicar filtro base de solo ofertas si es necesario
         if ($soloOfertas) {
@@ -182,8 +185,22 @@ class ProductoController extends Controller
             'precio_oferta' => ['nullable', 'numeric', 'min:0.01', 'lt:precio'], // Precio oferta menor que precio normal
             'talla' => ['required', 'string', 'max:50'],
             'estado' => ['required', Rule::in(['Nuevo', 'Como nuevo', 'Buen estado', 'Usado'])], // Estados permitidos
-            'categoria_id' => ['required', 'exists:categorias,id'], // Debe existir en la tabla categorias
+            'categoria_id' => ['required', 'exists:categorias,id'], //  tabla categorias
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            
         ]);
+
+        // Manejar la subida de nueva imagen
+        if ($request->hasFile('imagen')) {
+            // Eliminar imagen anterior si existe
+            if ($producto->imagen_url) {
+                Storage::disk('public')->delete($producto->imagen_url);
+            }
+            
+            // Guardar nueva imagen
+            $path = $request->file('imagen')->store('uploads/products', 'public');
+            $validatedData['imagen_url'] = $path;
+        }
         
         // Asegurarse de que precio_oferta sea null si está vacío o es 0
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) && $validatedData['precio_oferta'] > 0 ? $validatedData['precio_oferta'] : null;
@@ -193,7 +210,8 @@ class ProductoController extends Controller
 
         // Redirigir de vuelta al formulario de edición con un mensaje de éxito
         return redirect()->route('mis-prendas.edit', $producto)
-                         ->with('status', '¡Prenda actualizada correctamente!'); // Mensaje flash
+                         ->with('status', '¡Prenda actualizada correctamente!');
+        
     }
 
     /**
@@ -228,6 +246,66 @@ class ProductoController extends Controller
         // Redirigir a la lista de "Mis Prendas" con un mensaje de éxito
         return redirect()->route('mis-prendas.index')
                          ->with('status', '¡Prenda eliminada correctamente!');
+    }
+
+    /**
+     * Muestra el formulario para subir una nueva prenda.
+     */
+    public function create(): View
+    {
+        $categorias = Categoria::orderBy('nombre')->get();
+        
+        return view('productos.create', [
+            'categorias' => $categorias
+        ]);
+    }
+
+    /**
+     * Guarda una nueva prenda subida por el usuario.
+     */
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'nombre' => ['required', 'string', 'max:255'],
+            'descripcion' => ['required', 'string'],
+            'precio' => ['required', 'numeric', 'min:0.01'],
+            'precio_oferta' => ['nullable', 'numeric', 'min:0.01', 'lt:precio'],
+            'talla' => ['required', 'string', 'max:50'],
+            'estado' => ['required', Rule::in(['Nuevo', 'Como nuevo', 'Buen estado', 'Usado'])],
+            'categoria_id' => ['required', 'exists:categorias,id'],
+            'imagen' => ['required', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+        ]);
+
+        // Manejar la subida de la imagen
+        if ($request->hasFile('imagen')) {
+            $path = $request->file('imagen')->store('uploads/products', 'public');
+            $validatedData['imagen_url'] = $path;
+        } else {
+            return back()->with('status_error', 'Error: No se subió ninguna imagen.');
+        }
+
+        // Asegurarse de que precio_oferta sea null si está vacío
+        $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) ? $validatedData['precio_oferta'] : null;
+        
+        // Asignar el usuario autenticado y estado pendiente
+        $validatedData['usuario_id'] = Auth::id();
+        $validatedData['estado_aprobacion'] = 'pendiente'; // IMPORTANTE: queda pendiente de aprobación
+
+        // Crear el producto
+        try {
+            Producto::create($validatedData);
+            return redirect()->route('mis-prendas.index')
+                            ->with('status', '¡Prenda subida correctamente! Estará visible una vez aprobada por el administrador.');
+        } catch (\Exception $e) {
+            // Si falla, borrar la imagen subida
+            if (isset($path)) {
+                Storage::disk('public')->delete($path);
+            }
+            report($e);
+            return back()->with('status_error', 'Error al guardar la prenda.')
+                        ->withInput();
+        }
     }
 
 }

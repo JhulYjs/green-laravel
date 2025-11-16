@@ -132,7 +132,13 @@
                         <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
                             <label class="block text-base font-bold text-gray-700 mb-4">Imagen Actual</label>
                             <div class="flex items-center space-x-6">
-                                <img src="{{ asset($prenda->imagen_url) }}" alt="Imagen actual" class="w-32 h-32 object-cover rounded-2xl border-2 border-emerald-200 shadow-lg">
+                                @php
+                                    // Determinar la ruta correcta de la imagen
+                                    $imageUrl = $prenda->usuario_id !== null 
+                                        ? asset('storage/' . $prenda->imagen_url)
+                                        : asset($prenda->imagen_url);
+                                @endphp
+                                <img src="{{ $imageUrl }}" alt="Imagen actual" class="w-32 h-32 object-cover rounded-2xl border-2 border-emerald-200 shadow-lg">
                                 <div class="flex-1">
                                     <p class="text-sm text-gray-600">La edición de imagen no está disponible por ahora.</p>
                                     <p class="text-xs text-gray-500 mt-2">Para cambiar la imagen, contacta con soporte.</p>

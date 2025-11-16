@@ -1,6 +1,6 @@
 {{-- resources/views/productos/partials/grid.blade.php --}}
 {{-- Grid RESPONSIVE --}}
-<div id="product-grid" class="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+<div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
 
     @forelse ($productos as $producto)
         @include('productos.partials.card', ['producto' => $producto])

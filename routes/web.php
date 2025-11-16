@@ -23,7 +23,7 @@ Route::post('/logout', function () {
     return redirect('/');
 })->name('logout');
 
-Route::get('/', [HomeController::class, 'showHome'])->name('home.main');
+Route::get('/', [HomeController::class, 'showHome'])->name('home.main');    
 Route::get('/coleccion', [ProductoController::class, 'index'])->name('coleccion');
 Route::get('/producto/{producto}', [ProductoController::class, 'show'])->name('producto.show');
 Route::get('/sobre-nosotros', [HomeController::class, 'sobreNosotros'])->name('sobre-nosotros');
@@ -80,6 +80,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/{producto}/editar', [ProductoController::class, 'edit'])->name('edit');
         Route::put('/{producto}', [ProductoController::class, 'update'])->name('update');
         Route::delete('/{producto}', [ProductoController::class, 'destroy'])->name('destroy');
+
+        Route::get('/subir-prenda', [ProductoController::class, 'create'])->name('subir-prenda');
+        Route::post('/subir-prenda', [ProductoController::class, 'store'])->name('subir-prenda.store');
     });
 
     // Rutas de "Mis Pedidos"
@@ -112,6 +115,11 @@ Route::middleware(['auth', \App\Http\Middleware\CheckAdminRole::class])
     Route::get('/productos/{producto}/editar', [AdminProductoController::class, 'edit'])->name('productos.edit'); 
     Route::put('/productos/{producto}', [AdminProductoController::class, 'update'])->name('productos.update'); 
     Route::delete('/productos/{producto}', [AdminProductoController::class, 'destroy'])->name('productos.destroy');
+
+    Route::get('/productos/pendientes', [AdminProductoController::class, 'pendientes'])->name('productos.pendientes');
+    Route::patch('/productos/{producto}/aprobar', [AdminProductoController::class, 'aprobar'])->name('productos.aprobar');
+    Route::get('/productos/{producto}/rechazar', [AdminProductoController::class, 'mostrarFormRechazar'])->name('productos.mostrar-rechazar');
+    Route::patch('/productos/{producto}/rechazar', [AdminProductoController::class, 'rechazar'])->name('productos.rechazar');
 
     // --- Gestión de Pedidos ---
     Route::get('/pedidos', [AdminPedidoController::class, 'index'])->name('pedidos.index'); 

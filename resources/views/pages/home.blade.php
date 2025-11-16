@@ -62,6 +62,90 @@
             </div>
         </section>
 
+        {{-- Sección de Nuevas Prendas Aprobadas --}}
+        <section class="py-16 lg:py-24 bg-gradient-to-br from-white to-emerald-50 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-40 h-40 bg-emerald-200 rounded-full blur-3xl opacity-20"></div>
+            <div class="absolute bottom-0 right-0 w-60 h-60 bg-teal-200 rounded-full blur-3xl opacity-30"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center mb-12 sm:mb-16">
+                    <div class="inline-flex items-center space-x-2 bg-emerald-100/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-sm mb-4 sm:mb-6 border border-emerald-200/20">
+                        <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        <span class="text-xs sm:text-sm font-bold text-emerald-700">NUEVAS ADICIONES</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold font-serif bg-gradient-to-r from-gray-800 to-emerald-700 bg-clip-text text-transparent leading-tight">
+                        Prendas Recién Aprobadas
+                    </h2>
+                    <p class="mt-4 sm:mt-6 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
+                        Descubre las últimas prendas que se han unido a nuestra colección sostenible
+                    </p>
+                </div>
+
+                @php
+                    $nuevasPrendas = App\Models\Producto::recientesAprobados(7)->take(6)->get();
+                @endphp
+
+                @if($nuevasPrendas->count() > 0)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                        @foreach($nuevasPrendas as $prenda)
+                            <div class="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
+                                <div class="relative">
+                                    <img src="{{ asset('storage/' . $prenda->imagen_url) }}" 
+                                        alt="{{ $prenda->nombre }}" 
+                                        class="w-full h-48 sm:h-56 object-cover">
+                                    <div class="absolute top-3 right-3">
+                                        <span class="inline-flex items-center bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                            </svg>
+                                            Nueva
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="p-4 sm:p-6">
+                                    <h3 class="font-bold text-gray-800 text-lg mb-2 truncate">{{ $prenda->nombre }}</h3>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-2xl font-bold text-emerald-600">${{ number_format($prenda->precio_final, 2) }}</span>
+                                        @if($prenda->precio_oferta)
+                                            <span class="text-sm text-gray-500 line-through">${{ number_format($prenda->precio, 2) }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                        <span class="bg-gray-100 px-2 py-1 rounded">📏 {{ $prenda->talla }}</span>
+                                        <span class="bg-gray-100 px-2 py-1 rounded">⭐ {{ $prenda->estado }}</span>
+                                    </div>
+                                    <a href="{{ route('producto.show', $prenda) }}" 
+                                    class="mt-4 w-full inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold rounded-lg hover:from-emerald-600 hover:to-teal-600 transition-all duration-300">
+                                        Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    
+                    <div class="text-center mt-8 sm:mt-12">
+                        <a href="{{ route('coleccion') }}" 
+                        class="inline-flex items-center px-6 sm:px-8 py-3 bg-white text-gray-700 font-semibold rounded-xl border border-gray-300 shadow-sm hover:shadow-md hover:bg-gray-50 transition-all duration-300">
+                            Ver Todas las Prendas
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                            </svg>
+                        </a>
+                    </div>
+                @else
+                    <div class="text-center py-12">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        <p class="text-gray-600 text-lg">Próximamente nuevas prendas</p>
+                        <p class="text-gray-500 mt-2">Estamos revisando las últimas adiciones a la colección</p>
+                    </div>
+                @endif
+            </div>
+        </section>
+
         {{-- Sección Filosofía MEJORADA --}}
         <section class="bg-gradient-to-br from-gray-50 to-emerald-50 py-16 lg:py-24 relative overflow-hidden">
             {{-- Elementos decorativos --}}

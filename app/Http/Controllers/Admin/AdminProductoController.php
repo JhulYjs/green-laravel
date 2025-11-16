@@ -23,6 +23,7 @@ class AdminProductoController extends Controller
     {
         $productos = Producto::query()
             ->with('usuario')
+            ->aprobados()
             ->latest('fecha_creacion')
             ->get();
 
@@ -40,6 +41,10 @@ class AdminProductoController extends Controller
     }
 
     /**
+     * Guarda un nuevo producto en la base de datos (admin).
+     * Reemplaza procesarSubida y crearProducto
+     */
+        /**
      * Guarda un nuevo producto en la base de datos (admin).
      * Reemplaza procesarSubida y crearProducto
      */
@@ -75,6 +80,10 @@ class AdminProductoController extends Controller
         
         // Opcional: Asignar el ID del administrador actual como vendedor
         $validatedData['usuario_id'] = Auth::id(); 
+
+        // PRODUCTOS SUBIDOS POR ADMIN SE APRUEBAN AUTOMÁTICAMENTE - AGREGAR ESTAS 2 LÍNEAS
+        $validatedData['estado_aprobacion'] = 'aprobado';
+        $validatedData['fecha_aprobacion'] = now();
 
         // Crear el producto en la base de datos
         try {
@@ -172,5 +181,63 @@ class AdminProductoController extends Controller
             return redirect()->route('admin.productos.index')
                              ->with('status_error', 'Error al eliminar el producto.');
         }
+    }
+
+    /**
+     * Muestra la lista de productos pendientes de aprobación.
+     */
+    public function pendientes(): View
+    {
+        $productos = Producto::with('usuario')
+            ->pendientes()
+            ->latest('fecha_creacion')
+            ->get();
+
+        return view('admin.productos.pendientes', [
+            'productos' => $productos
+        ]);
+    }
+
+    /**
+     * Aprueba un producto pendiente.
+     */
+    public function aprobar(Producto $producto): RedirectResponse
+    {
+        $producto->update([
+            'estado_aprobacion' => 'aprobado',
+            'fecha_aprobacion' => now(),
+            'motivo_rechazo' => null
+        ]);
+
+        return redirect()->route('admin.productos.pendientes')
+                        ->with('status_success', 'Producto aprobado correctamente.');
+    }
+
+    /**
+     * Rechaza un producto pendiente.
+     */
+    public function rechazar(Request $request, Producto $producto): RedirectResponse
+    {
+        $validated = $request->validate([
+            'motivo_rechazo' => ['required', 'string', 'max:500']
+        ]);
+
+        $producto->update([
+            'estado_aprobacion' => 'rechazado',
+            'motivo_rechazo' => $validated['motivo_rechazo']
+        ]);
+
+        return redirect()->route('admin.productos.pendientes')
+                        ->with('status_success', 'Producto rechazado correctamente.');
+    }
+
+    /**
+     * Muestra el formulario para rechazar un producto.
+     */
+    public function mostrarFormRechazar(Producto $producto): View
+    {
+        return view('admin.productos.rechazar', [
+            'producto' => $producto
+        ]);
     }
 }

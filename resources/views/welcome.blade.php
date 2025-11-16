@@ -204,12 +204,199 @@
                                             Limpiar Filtros
                                         </button>
                                     </div>
+
+                                    
                             </aside>
 
                             {{-- Grid de Productos MEJORADO --}}
                             <div class="flex-1">
                                 <div class="bg-transparent">
                                     <div class="text-gray-900">
+
+                                        {{-- CARRUSEL LO MÁS NUEVO - AGREGAR ESTO --}}
+                                        @php
+                                            $nuevasPrendas = App\Models\Producto::aprobados()
+                                                ->orderBy('fecha_aprobacion', 'desc')
+                                                ->take(4)
+                                                ->get();
+                                        @endphp
+
+                                        @if($nuevasPrendas->count() > 0)
+                                        <div class="mb-8">
+                                            <div class="flex items-center justify-between mb-6">
+                                                <div>
+                                                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                                                        <svg class="w-5 h-5 text-emerald-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                                        </svg>
+                                                        Lo Más Nuevo
+                                                    </h2>
+                                                    <p class="text-gray-600 text-sm mt-1">Últimas prendas aprobadas</p>
+                                                </div>
+                                                <span class="bg-emerald-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+                                                    Nuevo
+                                                </span>
+                                            </div>
+
+                                            {{-- Carrusel Simple CSS --}}
+                                            <style>
+                                                .simple-carousel {
+                                                    position: relative;
+                                                    width: 100%;
+                                                    height: 500px;
+                                                    overflow: hidden;
+                                                    border-radius: 16px;
+                                                    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1);
+                                                }
+                                                .carousel-track {
+                                                    display: flex;
+                                                    transition: transform 0.5s ease-in-out;
+                                                    height: 100%;
+                                                }
+                                                .carousel-slide {
+                                                    min-width: 100%;
+                                                    height: 100%;
+                                                    position: relative;
+                                                }
+                                                /* SOLO IMÁGENES DEL CARRUSEL - CORREGIDO */
+                                                #carouselTrack .carousel-slide img {
+                                                    width: 100%;
+                                                    height: 100%;
+                                                    object-fit: cover;
+                                                    object-position: center;
+                                                    display: block;
+                                                }
+                                                .slide-info {
+                                                    position: absolute;
+                                                    bottom: 0;
+                                                    left: 0;
+                                                    right: 0;
+                                                    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+                                                    color: white;
+                                                    padding: 30px 20px 20px;
+                                                }
+                                                .carousel-btn {
+                                                    position: absolute;
+                                                    top: 50%;
+                                                    transform: translateY(-50%);
+                                                    background: rgba(255,255,255,0.9);
+                                                    border: none;
+                                                    width: 50px;
+                                                    height: 50px;
+                                                    border-radius: 50%;
+                                                    display: flex;
+                                                    align-items: center;
+                                                    justify-content: center;
+                                                    cursor: pointer;
+                                                    font-size: 20px;
+                                                    font-weight: bold;
+                                                    color: #059669;
+                                                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                                                    transition: all 0.3s ease;
+                                                    z-index: 10;
+                                                }
+                                                .carousel-btn:hover {
+                                                    background: white;
+                                                    transform: translateY(-50%) scale(1.1);
+                                                }
+                                                .carousel-prev { left: 20px; }
+                                                .carousel-next { right: 20px; }
+                                                .carousel-dots {
+                                                    position: absolute;
+                                                    bottom: 20px;
+                                                    left: 50%;
+                                                    transform: translateX(-50%);
+                                                    display: flex;
+                                                    gap: 10px;
+                                                    z-index: 10;
+                                                }
+                                                .carousel-dot {
+                                                    width: 12px;
+                                                    height: 12px;
+                                                    border-radius: 50%;
+                                                    background: rgba(255,255,255,0.6);
+                                                    cursor: pointer;
+                                                    transition: all 0.3s ease;
+                                                    border: 2px solid transparent;
+                                                }
+                                                .carousel-dot.active {
+                                                    background: white;
+                                                    transform: scale(1.2);
+                                                    border-color: #059669;
+                                                }
+                                            </style>
+
+                                            <div class="simple-carousel">
+                                                <div class="carousel-track" id="carouselTrack">
+                                                    @foreach($nuevasPrendas as $prenda)
+                                                    <div class="carousel-slide">
+                                                        @php
+                                                            $imageUrl = $prenda->usuario_id !== null 
+                                                                ? asset('storage/' . $prenda->imagen_url)
+                                                                : asset($prenda->imagen_url);
+                                                        @endphp
+                                                        <img src="{{ $imageUrl }}" alt="{{ $prenda->nombre }}">
+                                                        <div class="slide-info">
+                                                            <h3 class="text-white font-bold text-xl mb-2">{{ $prenda->nombre }}</h3>
+                                                            <p class="text-white text-lg mb-3">${{ number_format($prenda->precio_final, 2) }}</p>
+                                                            <div class="flex items-center gap-4 mb-3">
+                                                                <span class="text-white">📏 {{ $prenda->talla }}</span>
+                                                                <span class="text-white">⭐ {{ $prenda->estado }}</span>
+                                                                @if($prenda->precio_oferta)
+                                                                <span class="text-emerald-300">🔥 Oferta Especial</span>
+                                                                @endif
+                                                            </div>
+                                                            <a href="{{ route('producto.show', $prenda) }}" 
+                                                               class="inline-flex items-center px-6 py-3 bg-emerald-500 text-white font-semibold rounded-lg hover:bg-emerald-600 transition-all duration-300 transform hover:scale-105">
+                                                                Ver Detalles Completos
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+                                                <button class="carousel-btn carousel-prev" onclick="prevSlide()">‹</button>
+                                                <button class="carousel-btn carousel-next" onclick="nextSlide()">›</button>
+                                                <div class="carousel-dots" id="carouselDots">
+                                                    @foreach($nuevasPrendas as $key => $prenda)
+                                                    <div class="carousel-dot {{ $key === 0 ? 'active' : '' }}" onclick="goToSlide({{ $key }})"></div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+
+                                            <script>
+                                                let currentSlide = 0;
+                                                const totalSlides = {{ $nuevasPrendas->count() }};
+                                                const track = document.getElementById('carouselTrack');
+                                                const dots = document.querySelectorAll('.carousel-dot');
+
+                                                function updateCarousel() {
+                                                    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                                                    dots.forEach((dot, index) => {
+                                                        dot.classList.toggle('active', index === currentSlide);
+                                                    });
+                                                }
+
+                                                function nextSlide() {
+                                                    currentSlide = (currentSlide + 1) % totalSlides;
+                                                    updateCarousel();
+                                                }
+
+                                                function prevSlide() {
+                                                    currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+                                                    updateCarousel();
+                                                }
+
+                                                function goToSlide(slideIndex) {
+                                                    currentSlide = slideIndex;
+                                                    updateCarousel();
+                                                }
+
+                                                // Auto avanzar cada 5 segundos
+                                                setInterval(nextSlide, 5000);
+                                            </script>
+                                        </div>
+                                        @endif
+
                                         {{-- Contenedor para la rejilla --}}
                                         <div id="product-grid-container">
                                             @include('productos.partials.grid', ['productos' => $productos])
@@ -217,8 +404,8 @@
                                     </div>
                                 </div>
                             </div>
-
-                        </div> 
+                        
+                            
                         
                         {{-- Fin Layout Flex --}}
                         
