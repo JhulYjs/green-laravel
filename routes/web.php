@@ -128,3 +128,7 @@ Route::middleware(['auth', \App\Http\Middleware\CheckAdminRole::class])
 
     Route::get('/soporte', [AdminDashboardController::class, 'verMensajesSoporte'])->name('soporte.index');
 });
+
+
+// ========== RUTAS PARA GENERADOR DE OUTFITS ==========
+require __DIR__.'/outfits.php';

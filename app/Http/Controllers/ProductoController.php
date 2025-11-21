@@ -17,6 +17,7 @@ class ProductoController extends Controller
      * Muestra la página principal con la lista de productos (Colección).
      * Reemplaza tu lógica de 'mostrarColeccion'.
      */
+    
     public function index(Request $request): View // <-- Inject Request
     {
         // Obtener productos filtrados usando el método helper
@@ -211,6 +212,24 @@ class ProductoController extends Controller
         // Redirigir de vuelta al formulario de edición con un mensaje de éxito
         return redirect()->route('mis-prendas.edit', $producto)
                          ->with('status', '¡Prenda actualizada correctamente!');
+
+//Clasificacion automatica
+        $producto->fill($request->all());
+    
+        // 🔄 MANTENER LA CLASIFICACIÓN HÍBRIDA EN ACTUALIZACIÓN
+        $tipoPrenda = $request->tipo_prenda;
+        
+        if (empty($tipoPrenda)) {
+            $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
+        }
+        
+        $producto->tipo_prenda = $tipoPrenda;
+        // 🔄 FIN DEL NUEVO CÓDIGO
+        
+        $producto->save();
+        
+        return redirect()->route('mis-prendas.index')
+            ->with('success', 'Prenda actualizada correctamente');                 
         
     }
 
@@ -306,6 +325,66 @@ class ProductoController extends Controller
             return back()->with('status_error', 'Error al guardar la prenda.')
                         ->withInput();
         }
+
+         $producto = new Producto();
+            $producto->fill($request->all());
+            
+            // 🔄 CLASIFICACIÓN HÍBRIDA - NUEVO CÓDIGO
+            $tipoPrenda = $request->tipo_prenda;
+            
+            if (empty($tipoPrenda)) {
+                // Si el usuario no seleccionó, clasificar automáticamente
+                $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
+            }
+            
+            $producto->tipo_prenda = $tipoPrenda;
+            // 🔄 FIN DEL NUEVO CÓDIGO
+            
+            // ... el resto de tu lógica existente (usuario_id, imagen, etc.)
+            
+            // Guardar el producto
+            $producto->save();
+            
+            return redirect()->route('mis-prendas.index')
+                ->with('success', 'Prenda subida correctamente' . (empty($request->tipo_prenda) ? ' y clasificada automáticamente' : ''));
+
+    }
+
+    private function clasificarTipoPrenda($nombre)
+    {
+        $nombre = strtolower(trim($nombre));
+        
+        // Superiores
+        if (preg_match('/(camiseta|blusa|polo|camisa|top|tshirt|t-shirt|remera|jersey|suéter|sudadera|hoodie|blusa|shirt|top|playera|remera)/', $nombre)) {
+            return 'superior';
+        }
+        
+        // Inferiores
+        if (preg_match('/(pantalón|pantalon|jeans|falda|short|bermuda|leggings|pantalones|skirt|shorts|pants|vaquero|jean)/', $nombre)) {
+            return 'inferior';
+        }
+        
+        // Calzado
+        if (preg_match('/(zapato|zapatilla|tenis|sneaker|bota|sandalia|calzado|shoe|boot|sandal|zapato|tennis)/', $nombre)) {
+            return 'calzado';
+        }
+        
+        // Accesorios
+        if (preg_match('/(bolso|mochila|cartera|gorro|sombrero|bufanda|guante|cinturón|cinturon|joya|collar|arete|accesorio|bag|hat|scarf|belt|bolso|mochila|cartera)/', $nombre)) {
+            return 'accesorio';
+        }
+        
+        // Abrigos
+        if (preg_match('/(chaqueta|abrigo|blazer|chamarra|americana|coat|jacket|parka|impermeable|cardigan|sweater|chaqueta|abrigo|chamarra)/', $nombre)) {
+            return 'abrigo';
+        }
+        
+        // Vestidos
+        if (preg_match('/(vestido|vestid|dress|vestido|vestir)/', $nombre)) {
+            return 'vestido';
+        }
+        
+        return 'otros';
     }
 
 }

@@ -160,6 +160,30 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Categorizacion Manual -->
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-3 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                                </svg>
+                                Tipo de Prenda
+                            </label>
+                            <select name="tipo_prenda" 
+                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
+                                <option value="">🤖 Dejar que la IA clasifique automáticamente</option>
+                                <option value="superior">👕 Parte Superior (Camisetas, Blusas, Polos)</option>
+                                <option value="inferior">👖 Parte Inferior (Pantalones, Faldas, Shorts)</option>
+                                <option value="calzado">👟 Calzado (Zapatos, Zapatillas, Botas)</option>
+                                <option value="accesorio">💎 Accesorio (Bolsos, Joyería, Cinturones)</option>
+                                <option value="abrigo">🧥 Abrigo (Chaquetas, Abrigos, Sudaderas)</option>
+                                <option value="vestido">👗 Vestido (Vestidos enteros)</option>
+                                <option value="otros">📦 Otros</option>
+                            </select>
+                            <p class="text-xs text-gray-500 mt-2">
+                                💡 <strong>Consejo:</strong> Si dejas la selección automática, nuestra IA clasificará la prenda por su nombre para crear mejores outfits.
+                            </p>
+                        </div>
 
                         <!-- Botones -->
                         <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">

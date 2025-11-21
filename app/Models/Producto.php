@@ -28,6 +28,7 @@ class Producto extends Model
         'estado_aprobacion',
         'fecha_aprobacion',
         'motivo_rechazo',
+        'tipo_prenda',
     ];
 
     /**
@@ -48,7 +49,54 @@ class Producto extends Model
         'precio' => 'decimal:2',              // Optional: Cast prices too for consistency
         'precio_oferta' => 'decimal:2',       // Optional: Cast prices too for consistency
         'precio_final' => 'decimal:2',        // Optional: Cast prices too for consistency
-    ];                                           // <-- END ADDITION
+    ];  
+    
+     // MÉTODOS NUEVOS PARA TIPOS DE PRENDA
+    public function esSuperior(): bool
+    {
+        return $this->tipo_prenda === 'superior';
+    }
+
+    public function esInferior(): bool
+    {
+        return $this->tipo_prenda === 'inferior';
+    }
+
+    public function esCalzado(): bool
+    {
+        return $this->tipo_prenda === 'calzado';
+    }
+
+    public function esAccesorio(): bool
+    {
+        return $this->tipo_prenda === 'accesorio';
+    }
+
+    public function esAbrigo(): bool
+    {
+        return $this->tipo_prenda === 'abrigo';
+    }
+
+    public function esVestido(): bool
+    {
+        return $this->tipo_prenda === 'vestido';
+    }
+
+    public function getTipoPrendaTextoAttribute(): string
+    {
+        $tipos = [
+            'superior' => 'Parte Superior',
+            'inferior' => 'Parte Inferior', 
+            'calzado' => 'Calzado',
+            'accesorio' => 'Accesorio',
+            'abrigo' => 'Abrigo',
+            'vestido' => 'Vestido',
+            'otros' => 'Otros'
+        ];
+        
+        return $tipos[$this->tipo_prenda] ?? 'No especificado';
+    }
+// <-- END ADDITION
 
     //MÉTODOS NUEVOS
     public function estaPendiente(): bool

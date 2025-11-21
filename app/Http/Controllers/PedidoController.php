@@ -47,7 +47,7 @@ class PedidoController extends Controller
             DB::beginTransaction();
 
             // 2. Obtener los items del carrito usando la relación Eloquent
-            $carritoItems = $user->carrito()->get();
+            $carritoItems = $user->carrito()->withPivot('cantidad')->get();
 
             if ($carritoItems->isEmpty()) {
                 throw new \Exception("El carrito está vacío.");
