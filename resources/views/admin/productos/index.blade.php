@@ -58,9 +58,10 @@
                             <td class="px-4 py-3 text-sm text-gray-900 font-medium">{{ $producto->id }}</td>
                             <td class="px-4 py-3 text-sm">
                                 @php
-                                    $imageUrl = $producto->usuario_id !== null 
-                                        ? asset('storage/' . $producto->imagen_url)
-                                        : asset($producto->imagen_url);
+                                    // Usamos la misma lógica que en el catálogo
+                                    $imageUrl = \Illuminate\Support\Str::startsWith($producto->imagen_url, 'http') 
+                                        ? $producto->imagen_url 
+                                        : asset('storage/' . $producto->imagen_url);
                                 @endphp
                                 <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}" 
                                      class="w-10 h-12 object-cover rounded border border-gray-200">

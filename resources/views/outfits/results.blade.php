@@ -76,11 +76,12 @@
                             <div class="flex items-center space-x-4">
                                 {{-- Product Image --}}
                                 <div class="flex-shrink-0">
-                                    @php
-                                        $imageUrl = $producto->usuario_id !== null 
-                                            ? asset('storage/' . $producto->imagen_url)
-                                            : asset($producto->imagen_url);
-                                    @endphp
+                                @php
+                                    // Usamos la misma lógica que en el catálogo
+                                    $imageUrl = \Illuminate\Support\Str::startsWith($producto->imagen_url, 'http') 
+                                        ? $producto->imagen_url 
+                                        : asset('storage/' . $producto->imagen_url);
+                                @endphp
                                     <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}" 
                                          class="w-16 h-16 object-cover rounded-lg product-image">
                                 </div>

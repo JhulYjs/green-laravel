@@ -346,12 +346,12 @@
                                                 <div class="carousel-track" id="carouselTrack">
                                                     @foreach($nuevasPrendas as $prenda)
                                                     <div class="carousel-slide">
-                                                        @php
-                                                            $imageUrl = $prenda->usuario_id !== null 
-                                                                ? asset('storage/' . $prenda->imagen_url)
-                                                                : asset($prenda->imagen_url);
+                                                       @php
+                                                            $imageUrl = \Illuminate\Support\Str::startsWith($prenda->imagen_url, 'http') 
+                                                            ? $prenda->imagen_url 
+                                                            : asset('storage/' . $prenda->imagen_url);
                                                         @endphp
-                                                        <img src="{{ $imageUrl }}" alt="{{ $prenda->nombre }}">
+                                                                                                        <img src="{{ $imageUrl }}" alt="{{ $prenda->nombre }}">
                                                         <div class="slide-info">
                                                             <h3 class="text-white font-bold text-xl mb-2">{{ $prenda->nombre }}</h3>
                                                             <p class="text-white text-lg mb-3">${{ number_format($prenda->precio_final, 2) }}</p>

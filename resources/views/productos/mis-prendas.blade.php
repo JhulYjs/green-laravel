@@ -96,13 +96,9 @@
                                     <div class="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-4 lg:space-x-6">
                                         {{-- Imagen --}}
                                         @php
-                                            // Si la URL ya empieza con http (es externa) o no usa storage
-                                            if (Str::startsWith($producto->imagen_url, 'http')) {
-                                                $imageUrl = $producto->imagen_url;
-                                            } else {
-                                                // Siempre usamos storage para subidas locales
-                                                $imageUrl = asset('storage/' . $producto->imagen_url);
-                                            }
+                                           $imageUrl = \Illuminate\Support\Str::startsWith($prenda->imagen_url, 'http') 
+                                                ? $prenda->imagen_url 
+                                                : asset('storage/' . $prenda->imagen_url);
                                         @endphp
                                         <img src="{{ $imageUrl }}" alt="{{ $prenda->nombre }}" 
                                              class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl sm:rounded-2xl border-2 border-emerald-200 shadow-md flex-shrink-0">

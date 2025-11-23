@@ -1,4 +1,12 @@
 {{-- resources/views/productos/partials/card.blade.php --}}
+@php
+    // LÓGICA CORREGIDA DE IMAGEN
+    // Usamos Str::startsWith para detectar si es URL externa o local
+    $imageUrl = \Illuminate\Support\Str::startsWith($producto->imagen_url, 'http')
+        ? $producto->imagen_url
+        : asset('storage/' . $producto->imagen_url);
+@endphp
+
 <div class="group bg-white rounded-2xl border border-gray-200 shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 flex flex-col overflow-hidden h-full"
      data-id="{{ $producto->id }}"
      data-nombre="{{ $producto->nombre }}"
@@ -11,16 +19,7 @@
     <div class="relative overflow-hidden">
         {{-- Link to product details page --}}
         <a href="{{ route('producto.show', $producto) }}">
-        @php
-            // Si la URL ya empieza con http (es externa) o no usa storage
-            if (Str::startsWith($producto->imagen_url, 'http')) {
-                $imageUrl = $producto->imagen_url;
-            } else {
-                // Siempre usamos storage para subidas locales
-                $imageUrl = asset('storage/' . $producto->imagen_url);
-            }
-        @endphp
-        <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}"
+            <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}"
                  class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
         </a>
         

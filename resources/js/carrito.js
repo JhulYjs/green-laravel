@@ -130,9 +130,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Usa precio_final que ya viene calculado desde la migración/modelo si existe, sino calcula
                 const price = parseFloat(item.pivot?.precio_unitario || item.precio_final || item.precio_oferta || item.precio);
                 subtotal += price * (item.pivot?.cantidad || 1); // Multiplica por cantidad si existe
+                
+                let rutaImagen = item.imagen_url;
+                
+                // Si la imagen existe y NO es un enlace externo (http), la arreglamos
+                if (rutaImagen && !rutaImagen.startsWith('http')) {
+                    // Quitamos la basura ("public/" o "storage/")
+                    rutaImagen = rutaImagen.replace('public/', '').replace('storage/', '');
+                    // Le ponemos el prefijo correcto
+                    rutaImagen = `/storage/${rutaImagen}`;
+                }
+
                 itemsHTML += `
                     <div class="flex gap-4 p-4 border-b border-gray-100 last:border-b-0">
-                        <img src="${escapeHtml(item.imagen_url)}" alt="${escapeHtml(item.nombre)}" class="w-16 h-20 object-cover rounded border flex-shrink-0">
+                        <img src="${escapeHtml(rutaImagen)}" alt="${escapeHtml(item.nombre)}" class="w-16 h-20 object-cover rounded border flex-shrink-0">
                         <div class="flex-grow flex flex-col justify-between min-w-0">
                             <div>
                                 <h3 class="font-semibold text-gray-800 text-sm truncate pr-2">${escapeHtml(item.nombre)}</h3>
@@ -157,12 +168,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${itemsHTML}
             </div>
             ${ (items && items.length > 0) ? `
-            <div class="p-4 border-t border-gray-200 bg-w flex-shrink-0">
+            <div class="p-4 border-t border-gray-200 bg-white flex-shrink-0">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-md font-semibold text-gray-700">Subtotal:</span>
                     <span class="text-xl font-bold text-gray-800">$${subtotal.toFixed(2)}</span>
                 </div>
-                <button id="go-to-checkout-from-cart" class="w-full text-center bg-brand-500 text-black py-3 rounded-md font-bold hover:bg-brand-600 transition">
+                <button id="go-to-checkout-from-cart" class="w-full text-center bg-emerald-600 text-white py-3 rounded-md font-bold hover:bg-emerald-700 transition shadow-md">
                     Finalizar Compra
                 </button>
             </div>

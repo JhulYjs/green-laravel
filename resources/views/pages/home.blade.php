@@ -92,9 +92,17 @@
                         @foreach($nuevasPrendas as $prenda)
                             <div class="bg-white/80 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden">
                                 <div class="relative">
-                                    <img src="{{ asset('storage/' . $prenda->imagen_url) }}" 
+                                    {{-- INICIO CORRECCIÓN: Limpieza de ruta para nuevas prendas --}}
+                                    @php
+                                        $imageUrl = \Illuminate\Support\Str::startsWith($prenda->imagen_url, 'http') 
+                                            ? $prenda->imagen_url 
+                                            : asset('storage/' . $prenda->imagen_url);
+                                    @endphp
+                                    
+                                    <img src="{{ $imageUrl }}" 
                                         alt="{{ $prenda->nombre }}" 
                                         class="w-full h-48 sm:h-56 object-cover">
+                                    {{-- FIN CORRECCIÓN --}}
                                     <div class="absolute top-3 right-3">
                                         <span class="inline-flex items-center bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium">
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
