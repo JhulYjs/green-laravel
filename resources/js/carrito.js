@@ -178,8 +178,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>
             </div>
             ` : '' }
+            
         `;
     }
+    //Boton de finalizar cmpra actulizado
 
      // --- Función para actualizar el contador ---
      function updateCartCount(count) {
