@@ -300,10 +300,17 @@ class ProductoController extends Controller
         } else {
             return back()->with('status_error', 'Error: No se subió ninguna imagen.');
         }
-
         // Asegurarse de que precio_oferta sea null si está vacío
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) ? $validatedData['precio_oferta'] : null;
-        
+      
+        //CLASIFICACIÓN
+        // Si el usuario no eligió tipo, lo detectamos por el nombre
+        if (empty($request->tipo_prenda)) {
+            $validatedData['tipo_prenda'] = $this->clasificarTipoPrenda($request->nombre);
+        } else {
+            $validatedData['tipo_prenda'] = $request->tipo_prenda;
+        }
+
         // Asignar el usuario autenticado y estado pendiente
         $validatedData['usuario_id'] = Auth::id();
         $validatedData['estado_aprobacion'] = 'pendiente'; // IMPORTANTE: queda pendiente de aprobación
@@ -325,18 +332,6 @@ class ProductoController extends Controller
 
          $producto = new Producto();
             $producto->fill($request->all());
-            
-            //CLASIFICACIÓN HÍBRIDA - 
-            $tipoPrenda = $request->tipo_prenda;
-            
-            if (empty($tipoPrenda)) {
-                // Si el usuario no seleccionó, clasificar automáticamente
-                $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
-            }
-            
-            $producto->tipo_prenda = $tipoPrenda;
-            // FIN DEL NUEVO CÓDIGO
-               
             // Guardar el producto
             $producto->save();
             
