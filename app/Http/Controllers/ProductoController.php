@@ -305,11 +305,11 @@ class ProductoController extends Controller
       
         //CLASIFICACIÓN
         // Si el usuario no eligió tipo, lo detectamos por el nombre
-        if (empty($request->tipo_prenda)) {
-            $validatedData['tipo_prenda'] = $this->clasificarTipoPrenda($request->nombre);
-        } else {
-            $validatedData['tipo_prenda'] = $request->tipo_prenda;
+        $tipoPrenda = $request->tipo_prenda;
+        if (empty($tipoPrenda)) {
+            $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
         }
+        $validatedData['tipo_prenda'] = $tipoPrenda; // Guardamos el tipo en los datos validados
 
         // Asignar el usuario autenticado y estado pendiente
         $validatedData['usuario_id'] = Auth::id();
@@ -329,14 +329,6 @@ class ProductoController extends Controller
             return back()->with('status_error', 'Error al guardar la prenda.')
                         ->withInput();
         }
-
-         $producto = new Producto();
-            $producto->fill($request->all());
-            // Guardar el producto
-            $producto->save();
-            
-            return redirect()->route('mis-prendas.index')
-                ->with('success', 'Prenda subida correctamente' . (empty($request->tipo_prenda) ? ' y clasificada automáticamente' : ''));
 
     }
 
