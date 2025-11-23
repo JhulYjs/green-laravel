@@ -74,9 +74,16 @@ class AdminProductoController extends Controller
              return back()->with('status_error', 'Error: No se subió ninguna imagen.');
         }
 
-
         // Asegurarse de que precio_oferta sea null si está vacío o es 0
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) && $validatedData['precio_oferta'] > 0 ? $validatedData['precio_oferta'] : null;
+
+        // CLASIFICACIÓN (Para el Generador de Outfits)
+        $tipoPrenda = $request->tipo_prenda;
+        if (empty($tipoPrenda)) {
+            $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
+        }
+        $validatedData['tipo_prenda'] = $tipoPrenda;
+
         
         // Opcional: Asignar el ID del administrador actual como vendedor
         $validatedData['usuario_id'] = Auth::id(); 
@@ -139,6 +146,7 @@ class AdminProductoController extends Controller
         // Asegurarse de que precio_oferta sea null si está vacío o es 0
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) && $validatedData['precio_oferta'] > 0 ? $validatedData['precio_oferta'] : null;
 
+        
         // Actualizar el producto
         $producto->update($validatedData);
 
