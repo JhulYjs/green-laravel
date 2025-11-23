@@ -23,9 +23,13 @@
                         <div class="relative">
                             <div class="bg-white rounded-2xl border border-gray-200 shadow-lg p-6">
                                 @php
-                                    $imageUrl = $producto->usuario_id !== null && !str_starts_with($producto->imagen_url, 'public/')
-                                        ? asset('storage/' . $producto->imagen_url)
-                                        : asset($producto->imagen_url);
+                                    // Si la URL ya empieza con http (es externa) o no usa storage
+                                    if (Str::startsWith($producto->imagen_url, 'http')) {
+                                        $imageUrl = $producto->imagen_url;
+                                    } else {
+                                        // Siempre usamos storage para subidas locales
+                                        $imageUrl = asset('storage/' . $producto->imagen_url);
+                                    }
                                 @endphp
                                 <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}" 
                                      class="w-full h-96 object-cover rounded-2xl shadow-md transform hover:scale-105 transition-transform duration-500">
