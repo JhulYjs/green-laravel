@@ -11,13 +11,16 @@
     <div class="relative overflow-hidden">
         {{-- Link to product details page --}}
         <a href="{{ route('producto.show', $producto) }}">
-            @php
-                $imageUrl = $producto->usuario_id !== null
-                    ? asset('storage/' . $producto->imagen_url)
-                    : asset($producto->imagen_url);
-            @endphp
-
-            <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}"
+        @php
+            // Si la URL ya empieza con http (es externa) o no usa storage
+            if (Str::startsWith($producto->imagen_url, 'http')) {
+                $imageUrl = $producto->imagen_url;
+            } else {
+                // Siempre usamos storage para subidas locales
+                $imageUrl = asset('storage/' . $producto->imagen_url);
+            }
+        @endphp
+        <img src="{{ $imageUrl }}" alt="{{ $producto->nombre }}"
                  class="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110">
         </a>
         
