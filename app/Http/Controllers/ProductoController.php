@@ -121,7 +121,6 @@ class ProductoController extends Controller
 
     /**
      * Muestra la página de detalles de un producto específico.
-     * Reemplaza la lógica de 'mostrarProducto'
      */
     public function show(Producto $producto) // Usa Route Model Binding
     {
@@ -213,10 +212,10 @@ class ProductoController extends Controller
         return redirect()->route('mis-prendas.edit', $producto)
                          ->with('status', '¡Prenda actualizada correctamente!');
 
-//Clasificacion automatica
+        //Clasificacion automatica
         $producto->fill($request->all());
     
-        // 🔄 MANTENER LA CLASIFICACIÓN HÍBRIDA EN ACTUALIZACIÓN
+        // MANTENER LA CLASIFICACIÓN HÍBRIDA EN ACTUALIZACIÓN
         $tipoPrenda = $request->tipo_prenda;
         
         if (empty($tipoPrenda)) {
@@ -224,7 +223,6 @@ class ProductoController extends Controller
         }
         
         $producto->tipo_prenda = $tipoPrenda;
-        // 🔄 FIN DEL NUEVO CÓDIGO
         
         $producto->save();
         
@@ -235,7 +233,6 @@ class ProductoController extends Controller
 
     /**
      * Elimina una prenda específica de la base de datos.
-     * Reemplaza eliminarPrenda
      */
     public function destroy(Producto $producto)
     {
@@ -329,7 +326,7 @@ class ProductoController extends Controller
          $producto = new Producto();
             $producto->fill($request->all());
             
-            // 🔄 CLASIFICACIÓN HÍBRIDA - NUEVO CÓDIGO
+            //CLASIFICACIÓN HÍBRIDA - 
             $tipoPrenda = $request->tipo_prenda;
             
             if (empty($tipoPrenda)) {
@@ -338,10 +335,8 @@ class ProductoController extends Controller
             }
             
             $producto->tipo_prenda = $tipoPrenda;
-            // 🔄 FIN DEL NUEVO CÓDIGO
-            
-            // ... el resto de tu lógica existente (usuario_id, imagen, etc.)
-            
+            // FIN DEL NUEVO CÓDIGO
+               
             // Guardar el producto
             $producto->save();
             
