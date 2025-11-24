@@ -67,9 +67,9 @@ class Producto extends Model
         return $this->tipo_prenda === 'calzado';
     }
 
-    public function esAccesorio(): bool
-    {
-        return $this->tipo_prenda === 'accesorio';
+    public function esAccesorio(): bool 
+    { 
+        return $this->tipo_prenda === 'accesorio'; 
     }
 
     public function esAbrigo(): bool

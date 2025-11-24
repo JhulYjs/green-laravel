@@ -39,37 +39,38 @@ class ClasificarProductos extends Command
     {
         $nombre = strtolower($nombre);
         
-        // Superiores
-        if (preg_match('/(camiseta|blusa|polo|camisa|top|t-shirt|remera|jersey|suéter|sudadera|hoodie)/', $nombre)) {
-            return 'superior';
+        // 1. Vestidos (Prioridad alta para evitar que se confundan con tops)
+        if (preg_match('/(vestido|vestid|dress|enterizo|mono|jumpsuit)/', $nombre)) {
+            return 'vestido';
         }
-        
-        // Inferiores
-        if (preg_match('/(pantalón|pantalon|jeans|falda|short|bermuda|leggings|pantalones)/', $nombre)) {
-            return 'inferior';
-        }
-        
-        // Calzado
-        if (preg_match('/(zapato|zapatilla|tenis|sneaker|bota|sandalia|calzado|shoe)/', $nombre)) {
+
+        // 2. Calzado (Zapatos obligatorios)
+        if (preg_match('/(zapato|zapatilla|tenis|sneaker|bota|sandalia|calzado|shoe|boot|sandal|mocasin|tacón|tacon)/', $nombre)) {
             return 'calzado';
         }
         
-        // Accesorios
-        if (preg_match('/(bolso|mochila|cartera|gorro|sombrero|bufanda|guante|cinturón|cinturon|joya|collares|arete|accesorio)/', $nombre)) {
-            return 'accesorio';
+        // 3. Superiores
+        if (preg_match('/(camiseta|blusa|polo|camisa|top|t-shirt|remera|jersey|suéter|sudadera|hoodie|chaleco|bodysuit)/', $nombre)) {
+            return 'superior';
         }
         
-        // Abrigos
-        if (preg_match('/(chaqueta|abrigo|blazer|chamarra|americana|coat|jacket|parka|impermeable)/', $nombre)) {
+        // 4. Inferiores
+        if (preg_match('/(pantalón|pantalon|jeans|falda|short|bermuda|leggings|pantalones|skirt|vaquero)/', $nombre)) {
+            return 'inferior';
+        }
+        
+        // 5. Abrigos
+        if (preg_match('/(chaqueta|abrigo|blazer|chamarra|americana|coat|jacket|parka|impermeable|gabardina|cardigan)/', $nombre)) {
             return 'abrigo';
         }
         
-        // Vestidos
-        if (preg_match('/(vestido|vestid|dress)/', $nombre)) {
-            return 'vestido';
+        // 6. Accesorios (SIN JOYAS - Solo funcionales como sombreros, bufandas, bolsos)
+        // Hemos quitado: joya, collar, arete, anillo, pulsera
+        if (preg_match('/(bolso|mochila|cartera|gorro|sombrero|bufanda|guante|cinturón|cinturon|lentes|gafas|bag|hat|scarf|belt|cap)/', $nombre)) {
+            return 'accesorio';
         }
         
-        return 'otros';
+        return 'otros'; // Las joyas caerán aquí y serán ignoradas por el generador
     }
     
     private function mostrarResumenClasificacion()

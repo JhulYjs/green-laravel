@@ -49,11 +49,20 @@ async function updateOrderSummary() {
                      const price = parseFloat(item.pivot?.precio_unitario || item.precio_final || item.precio_oferta || item.precio);
                      subtotal += price * (item.pivot?.cantidad || 1);
                      
+
+                     let imgPath = item.imagen_url;
+                    
+                    // Si existe y no es externa, la limpiamos y agregamos prefijo
+                    if (imgPath && !imgPath.startsWith('http')) {
+                        imgPath = imgPath.replace('public/', '').replace('storage/', '');
+                        imgPath = `/storage/${imgPath}`;
+                    }
+                    // -----------------------------------------
                      // --- INICIO CÓDIGO HTML MEJORADO ---
                      itemsHTML += `
                          <div class="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0"> 
                              <div class="flex items-center space-x-3 flex-grow min-w-0 mr-4">
-                                 <img src="${escapeHtml(item.imagen_url)}" 
+                                 <img src="${escapeHtml(imgPath)}" 
                                       alt="${escapeHtml(item.nombre)}" 
                                       class="w-10 h-12 object-cover rounded border flex-shrink-0">
                                  
