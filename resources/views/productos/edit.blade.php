@@ -127,6 +127,25 @@
                                 </select>
                             </div>
                         </div>
+                        {{-- Selector de Tipo de Prenda (Edición) --}}
+                        <div class="mt-4">
+                            <x-input-label for="tipo_prenda" :value="__('Clasificación para el Armario Virtual')" />
+                            <select id="tipo_prenda" name="tipo_prenda" class="block mt-1 w-full border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm text-gray-700">
+                                <option value="">🤖 Detectar automáticamente con IA</option>
+                                
+                                {{-- Usamos $prenda o $producto dependiendo de cómo se llame la variable en tu archivo --}}
+                                @php $item = $prenda ?? $producto; @endphp
+
+                                <option value="superior" {{ old('tipo_prenda', $item->tipo_prenda) == 'superior' ? 'selected' : '' }}>👕 Parte Superior (Camisas, Tops, Polos)</option>
+                                <option value="inferior" {{ old('tipo_prenda', $item->tipo_prenda) == 'inferior' ? 'selected' : '' }}>👖 Parte Inferior (Pantalones, Faldas)</option>
+                                <option value="calzado" {{ old('tipo_prenda', $item->tipo_prenda) == 'calzado' ? 'selected' : '' }}>👟 Calzado (Zapatos, Tenis, Botas)</option>
+                                <option value="vestido" {{ old('tipo_prenda', $item->tipo_prenda) == 'vestido' ? 'selected' : '' }}>👗 Vestido / Enterizo</option>
+                                <option value="abrigo" {{ old('tipo_prenda', $item->tipo_prenda) == 'abrigo' ? 'selected' : '' }}>🧥 Abrigo / Chaqueta</option>
+                                <option value="accesorio" {{ old('tipo_prenda', $item->tipo_prenda) == 'accesorio' ? 'selected' : '' }}>👜 Accesorio (Bolsos, Sombreros)</option>
+                                <option value="otros" {{ old('tipo_prenda', $item->tipo_prenda) == 'otros' ? 'selected' : '' }}>💎 Otros / Joyería</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('tipo_prenda')" class="mt-2" />
+                        </div>
 
                         {{-- Imagen Actual --}}
                         <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">

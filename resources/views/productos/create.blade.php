@@ -169,17 +169,22 @@
                                 </svg>
                                 Tipo de Prenda
                             </label>
-                            <select name="tipo_prenda" 
-                                    class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200">
-                                <option value="">🤖 Dejar que la IA clasifique automáticamente</option>
-                                <option value="superior">👕 Parte Superior (Camisetas, Blusas, Polos)</option>
-                                <option value="inferior">👖 Parte Inferior (Pantalones, Faldas, Shorts)</option>
-                                <option value="calzado">👟 Calzado (Zapatos, Zapatillas, Botas)</option>
-                                <option value="accesorio">💎 Accesorio (Bolsos, Joyería, Cinturones)</option>
-                                <option value="abrigo">🧥 Abrigo (Chaquetas, Abrigos, Sudaderas)</option>
-                                <option value="vestido">👗 Vestido (Vestidos enteros)</option>
-                                <option value="otros">📦 Otros</option>
-                            </select>
+                    {{-- Selector de Tipo de Prenda (Corregido y con Emojis) --}}
+                            <div class="mt-4">
+                                <x-input-label for="tipo_prenda" :value="__('Clasificación para el Armario Virtual')" />
+                                <select id="tipo_prenda" name="tipo_prenda" class="block mt-1 w-full border-gray-300 focus:border-emerald-500 focus:ring-emerald-500 rounded-md shadow-sm text-gray-700">
+                                    <option value="">🤖 Detectar automáticamente con IA</option>
+                                    <option value="superior" {{ old('tipo_prenda') == 'superior' ? 'selected' : '' }}>👕 Parte Superior (Camisas, Tops, Polos)</option>
+                                    <option value="inferior" {{ old('tipo_prenda') == 'inferior' ? 'selected' : '' }}>👖 Parte Inferior (Pantalones, Faldas)</option>
+                                    <option value="calzado" {{ old('tipo_prenda') == 'calzado' ? 'selected' : '' }}>👟 Calzado (Zapatos, Tenis, Botas)</option>
+                                    <option value="vestido" {{ old('tipo_prenda') == 'vestido' ? 'selected' : '' }}>👗 Vestido / Enterizo (Cuerpo completo)</option>
+                                    <option value="abrigo" {{ old('tipo_prenda') == 'abrigo' ? 'selected' : '' }}>🧥 Abrigo / Chaqueta (Capa externa)</option>
+                                    <option value="accesorio" {{ old('tipo_prenda') == 'accesorio' ? 'selected' : '' }}>👜 Accesorio (Bolsos, Sombreros, Bufandas)</option>
+                                    <option value="otros" {{ old('tipo_prenda') == 'otros' ? 'selected' : '' }}>💎 Otros / Joyería (No genera outfit)</option>
+                                </select>
+                                <p class="text-xs text-gray-500 mt-1">Ayuda a la IA a crear mejores outfits eligiendo la opción correcta.</p>
+                                <x-input-error :messages="$errors->get('tipo_prenda')" class="mt-2" />
+                            </div>
                             <p class="text-xs text-gray-500 mt-2">
                                 💡 <strong>Consejo:</strong> Si dejas la selección automática, nuestra IA clasificará la prenda por su nombre para crear mejores outfits.
                             </p>

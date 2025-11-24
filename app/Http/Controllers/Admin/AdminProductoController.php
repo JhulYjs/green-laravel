@@ -129,9 +129,9 @@ class AdminProductoController extends Controller
      * Actualiza un producto específico en la base de datos (admin).
      * Adapta procesarEditarProducto y actualizarProductoAdmin
      */
-    public function update(Request $request, Producto $producto): RedirectResponse // Usa Route Model Binding
+    public function update(Request $request, Producto $producto): RedirectResponse
     {
-        // Validar los datos del formulario (similar a ProductoController::update, pero sin verificar usuario_id)
+        // 1. Validar
         $validatedData = $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string'],
@@ -140,21 +140,38 @@ class AdminProductoController extends Controller
             'talla' => ['required', 'string', 'max:50'],
             'estado' => ['required', Rule::in(['Nuevo', 'Como nuevo', 'Buen estado', 'Usado'])],
             'categoria_id' => ['required', 'exists:categorias,id'],
-            // No validamos imagen aquí
+            'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            // NUEVA REGLA DE VALIDACIÓN
+            'tipo_prenda' => ['nullable', 'string', 'in:superior,inferior,calzado,vestido,abrigo,accesorio,otros'],
         ]);
 
-        // Asegurarse de que precio_oferta sea null si está vacío o es 0
+        // 2. Manejar Imagen
+        if ($request->hasFile('imagen')) {
+            if ($producto->imagen_url) {
+                Storage::disk('public')->delete($producto->imagen_url);
+            }
+            $path = $request->file('imagen')->store('uploads/products', 'public');
+            $validatedData['imagen_url'] = $path;
+        }
+
+        // 3. Ajustes varios
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) && $validatedData['precio_oferta'] > 0 ? $validatedData['precio_oferta'] : null;
 
-        
-        // Actualizar el producto
+        // 4. CLASIFICACIÓN
+        $tipoPrenda = $request->tipo_prenda;
+        if (empty($tipoPrenda)) {
+            // Asegúrate de tener el método 'clasificarTipoPrenda' copiado en este controlador también
+            $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
+        }
+        $validatedData['tipo_prenda'] = $tipoPrenda;
+
+        // 5. Guardar
         $producto->update($validatedData);
 
-        // Redirigir de vuelta al formulario de edición con mensaje de éxito
+        // 6. Redirigir
         return redirect()->route('admin.productos.edit', $producto)
-                         ->with('status_success', 'Producto actualizado correctamente.');
+                         ->with('status_success', 'Producto actualizado y clasificado correctamente.');
     }
-
     /**
      * Elimina un producto específico de la base de datos (admin).
      * Adapta procesarEliminarProducto y adminEliminarProducto
@@ -247,5 +264,45 @@ class AdminProductoController extends Controller
         return view('admin.productos.rechazar', [
             'producto' => $producto
         ]);
+    }
+
+    /**
+     * Clasifica el tipo de prenda basado en el nombre (Helper Privado).
+     */
+    private function clasificarTipoPrenda($nombre)
+    {
+        $nombre = strtolower(trim($nombre));
+        
+        // 1. Vestidos (Prioridad Alta)
+        if (preg_match('/(vestido|vestid|dress|enterizo|mono|jumpsuit)/', $nombre)) {
+            return 'vestido';
+        }
+
+        // 2. Calzado (Prioridad Alta)
+        if (preg_match('/(zapato|zapatilla|tenis|sneaker|bota|sandalia|calzado|shoe|boot|sandal|mocasin|tacón|tacon)/', $nombre)) {
+            return 'calzado';
+        }
+        
+        // 3. Abrigos
+        if (preg_match('/(chaqueta|abrigo|blazer|chamarra|americana|coat|jacket|parka|impermeable|gabardina|cardigan)/', $nombre)) {
+            return 'abrigo';
+        }
+
+        // 4. Superiores
+        if (preg_match('/(camiseta|blusa|polo|camisa|top|t-shirt|remera|jersey|suéter|sudadera|hoodie|chaleco|bodysuit)/', $nombre)) {
+            return 'superior';
+        }
+        
+        // 5. Inferiores
+        if (preg_match('/(pantalón|pantalon|jeans|falda|short|bermuda|leggings|pantalones|skirt|vaquero)/', $nombre)) {
+            return 'inferior';
+        }
+        
+        // 6. Accesorios (SIN JOYAS - Solo funcionales)
+        if (preg_match('/(bolso|mochila|cartera|gorro|sombrero|bufanda|guante|cinturón|cinturon|lentes|gafas|bag|hat|scarf|belt|cap)/', $nombre)) {
+            return 'accesorio';
+        }
+        
+        return 'otros';
     }
 }

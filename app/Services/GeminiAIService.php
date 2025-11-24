@@ -62,34 +62,32 @@ private function prepareMultimodalData($productos, $estilo, $ocasion, $temporada
     {
         $parts = [];
 
-        // Prompt del Estilista
-        $prompt = "Actúa como un consultor de imagen de alta costura y experto en teoría del color.
+        // Prompt BLINDADO para respetar las preferencias del usuario
+        $prompt = "Actúa como un Asesor de Imagen Personal estricto.
         
-        TU MISIÓN:
-        Crear 3 outfits visualmente impactantes y coherentes usando SOLAMENTE los productos proporcionados.
-        
-        CONTEXTO DEL CLIENTE:
-        - Estilo deseado: $estilo
-        - Ocasión: $ocasion
-        - Temporada (Clima): $temporada
-        - Colores preferidos: $colores
-        - Notas extra: $preferencias
+        TU CLIENTE HA DEFINIDO ESTOS REQUISITOS (DEBES CUMPLIRLOS TODOS):
+        1. **ESTILO OBLIGATORIO:** El usuario eligió estilo '$estilo'. (Ej: Si es 'Deportivo' usa zapatillas/ropa cómoda. Si es 'Elegante' prioriza tacones/vestidos/camisas. Si es 'Urbano' usa denim/streetwear).
+        2. **OCASIÓN:** El outfit es para '$ocasion'. (Asegúrate de que sea apropiado para este contexto).
+        3. **TEMPORADA:** Es '$temporada'. (CRÍTICO: Si es Invierno/Otoño prioriza abrigos y capas. Si es Verano/Primavera usa telas ligeras).
+        4. **COLORES:** El usuario prefiere: '$colores'. (Intenta priorizar estos colores si existen en el armario).
+        5. **NOTAS DEL USUARIO:** '$preferencias'. (Esta es una instrucción directa, respétala por encima de todo).
 
-        REGLAS DE ESTILO INQUEBRANTABLES:
-        1. **COHERENCIA CLIMÁTICA:** Respeta el clima (Invierno=Abrigo, Verano=Ligero).
-        2. **ARMONÍA VISUAL:** Combina colores usando teoría del color (complementarios, análogos).
-        3. **ESTRUCTURA:**
-           - Opción A: Superior + Inferior + Calzado.
+        TU MISIÓN:
+        Analiza visualmente las prendas y crea 3 outfits que cumplan los requisitos anteriores usando SOLAMENTE los productos de la lista.
+
+        REGLAS TÉCNICAS (NO ROMPER):
+        1. **ZAPATOS:** Cada outfit DEBE tener calzado. (No dejes al usuario descalzo).
+        2. **LÓGICA:** - Opción A: Superior + Inferior + Calzado.
            - Opción B: Vestido + Calzado.
-           - PROHIBIDO: Falda/Pantalón debajo de vestido.
-        4. **ZAPATOS:** El calzado es obligatorio y debe combinar.
+           - PROHIBIDO: Poner pantalón/falda debajo de un vestido.
+        3. **VISUAL:** Combina colores con criterio (Círculo cromático).
 
         FORMATO DE RESPUESTA JSON (ESTRICTO):
         {
             \"outfits\": [
                 {
-                    \"nombre\": \"Nombre creativo\",
-                    \"descripcion\": \"Explicación corta de estilo.\",
+                    \"nombre\": \"Nombre creativo del look\",
+                    \"descripcion\": \"Explica brevemente por qué este outfit encaja con el estilo $estilo y la ocasión $ocasion.\",
                     \"prendas\": [id_producto, id_producto...]
                 }
             ]
@@ -97,33 +95,28 @@ private function prepareMultimodalData($productos, $estilo, $ocasion, $temporada
 
         $parts[] = ['text' => $prompt];
 
-        // Procesar productos
+        // Procesar productos (Texto + Imagen)
         foreach ($productos as $producto) {
-            // Info de texto
-            $infoTexto = "ID: {$producto->id} | Prenda: {$producto->tipo_prenda_texto} | Nombre: {$producto->nombre} | Color: {$producto->descripcion}";
+            $infoTexto = "ID: {$producto->id} | Tipo: {$producto->tipo_prenda_texto} | Nombre: {$producto->nombre} | Color/Desc: {$producto->descripcion}";
             $parts[] = ['text' => $infoTexto];
 
-            // Info de imagen (CON CORRECCIÓN DE ERROR)
             if ($producto->imagen_url) {
-                // 1. Limpieza de ruta
+                // Limpieza de ruta
                 $rutaLimpia = str_replace(['public/', 'storage/'], '', $producto->imagen_url);
-                $rutaLimpia = ltrim($rutaLimpia, '/'); // Quitar barra inicial si existe
+                $rutaLimpia = ltrim($rutaLimpia, '/'); 
                 
                 try {
-                    // 2. Verificar existencia en disco 'public'
                     if (Storage::disk('public')->exists($rutaLimpia)) {
-                         
-                         // Leer el archivo
                          $fileContent = Storage::disk('public')->get($rutaLimpia);
                          $imageData = base64_encode($fileContent);
                          
-                         // CORRECCIÓN: Determinar MimeType por extensión (Más seguro que Storage::mimeType)
+                         // Detección segura de tipo de imagen
                          $extension = strtolower(pathinfo($rutaLimpia, PATHINFO_EXTENSION));
                          $mimeType = match($extension) {
                              'png' => 'image/png',
                              'webp' => 'image/webp',
                              'gif' => 'image/gif',
-                             default => 'image/jpeg', // jpg, jpeg y otros caen aquí
+                             default => 'image/jpeg',
                          };
                          
                          $parts[] = [
@@ -134,9 +127,7 @@ private function prepareMultimodalData($productos, $estilo, $ocasion, $temporada
                          ];
                     }
                 } catch (\Exception $e) {
-                    // Si falla una imagen, la ignoramos y seguimos con el texto
-                    // Esto evita que todo el generador se rompa por una foto mala
-                    Log::warning("Imagen omitida ID {$producto->id}: " . $e->getMessage());
+                    Log::warning("Imagen omitida ID {$producto->id}");
                 }
             }
         }

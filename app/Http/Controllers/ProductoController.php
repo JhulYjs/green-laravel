@@ -170,67 +170,56 @@ class ProductoController extends Controller
      * Actualiza una prenda específica en la base de datos.
      * Reemplaza procesarEditarPrenda
      */
-    public function update(Request $request, Producto $producto)
+public function update(Request $request, Producto $producto)
     {
-        // Verificar propiedad
+        // 1. Verificar propiedad
         if ($producto->usuario_id !== Auth::id()) {
             abort(403);
         }
 
-        // Validar los datos del formulario
+        // 2. Validar (¡Agregamos 'tipo_prenda' aquí!)
         $validatedData = $request->validate([
             'nombre' => ['required', 'string', 'max:255'],
             'descripcion' => ['required', 'string'],
             'precio' => ['required', 'numeric', 'min:0.01'],
-            'precio_oferta' => ['nullable', 'numeric', 'min:0.01', 'lt:precio'], // Precio oferta menor que precio normal
+            'precio_oferta' => ['nullable', 'numeric', 'min:0.01', 'lt:precio'],
             'talla' => ['required', 'string', 'max:50'],
-            'estado' => ['required', Rule::in(['Nuevo', 'Como nuevo', 'Buen estado', 'Usado'])], // Estados permitidos
-            'categoria_id' => ['required', 'exists:categorias,id'], //  tabla categorias
+            'estado' => ['required', Rule::in(['Nuevo', 'Como nuevo', 'Buen estado', 'Usado'])],
+            'categoria_id' => ['required', 'exists:categorias,id'],
             'imagen' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
-            
+            // NUEVA REGLA DE VALIDACIÓN
+            'tipo_prenda' => ['nullable', 'string', 'in:superior,inferior,calzado,vestido,abrigo,accesorio,otros'],
         ]);
 
-        // Manejar la subida de nueva imagen
+        // 3. Manejar Imagen
         if ($request->hasFile('imagen')) {
-            // Eliminar imagen anterior si existe
             if ($producto->imagen_url) {
                 Storage::disk('public')->delete($producto->imagen_url);
             }
-            
-            // Guardar nueva imagen
             $path = $request->file('imagen')->store('uploads/products', 'public');
             $validatedData['imagen_url'] = $path;
         }
         
-        // Asegurarse de que precio_oferta sea null si está vacío o es 0
+        // 4. Ajustes de precio
         $validatedData['precio_oferta'] = !empty($validatedData['precio_oferta']) && $validatedData['precio_oferta'] > 0 ? $validatedData['precio_oferta'] : null;
 
-        // Actualizar el producto con los datos validados
-        $producto->update($validatedData);
-
-        // Redirigir de vuelta al formulario de edición con un mensaje de éxito
-        return redirect()->route('mis-prendas.edit', $producto)
-                         ->with('status', '¡Prenda actualizada correctamente!');
-
-        //Clasificacion automatica
-        $producto->fill($request->all());
-    
-        // MANTENER LA CLASIFICACIÓN HÍBRIDA EN ACTUALIZACIÓN
+        // 5. CLASIFICACIÓN INTELIGENTE (La parte clave)
+        // Si el usuario seleccionó algo, lo usamos. Si no, la IA lo intenta adivinar.
         $tipoPrenda = $request->tipo_prenda;
         
         if (empty($tipoPrenda)) {
+            // Usamos la función auxiliar que ya tienes en este archivo
             $tipoPrenda = $this->clasificarTipoPrenda($request->nombre);
         }
-        
-        $producto->tipo_prenda = $tipoPrenda;
-        
-        $producto->save();
-        
-        return redirect()->route('mis-prendas.index')
-            ->with('success', 'Prenda actualizada correctamente');                 
-        
-    }
+        $validatedData['tipo_prenda'] = $tipoPrenda;
 
+        // 6. Actualizar y Guardar
+        $producto->update($validatedData);
+
+        // 7. Redirigir (Esto va AL FINAL)
+        return redirect()->route('mis-prendas.edit', $producto)
+                         ->with('status', '¡Prenda actualizada y clasificada correctamente!');
+    }
     /**
      * Elimina una prenda específica de la base de datos.
      */

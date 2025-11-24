@@ -64,7 +64,7 @@
 
             {{-- Generator Form --}}
             <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-                <form action="{{ route('outfits.process') }}" method="POST" class="p-8">
+                <form id="outfit-generator-form" action="{{ route('outfits.process') }}" method="POST" class="p-8">
                     @csrf
 
                     {{-- Estilo --}}
@@ -176,7 +176,58 @@
         </div>
     </div>
 
+
+    
     {{-- Footer --}}
     <x-footer />
+    {{-- PANTALLA DE CARGA (CORREGIDA) --}}
+    <div id="loading-overlay" class="fixed inset-0 bg-gray-900/80 z-[1000] hidden flex-col items-center justify-center backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-sm mx-4 border border-emerald-100 transform scale-100 animate-pulse">
+            {{-- Spinner --}}
+            <div class="relative w-20 h-20 mx-auto mb-6">
+                <div class="absolute inset-0 border-4 border-emerald-200 rounded-full"></div>
+                <div class="absolute inset-0 border-4 border-emerald-600 rounded-full border-t-transparent animate-spin"></div>
+            </div>
+            
+            <h3 class="text-2xl font-bold text-gray-800 mb-2 font-serif">Diseñando tu Estilo...</h3>
+            <p class="text-gray-600 text-base" id="loading-text">Analizando tus prendas.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('outfit-generator-form'); // Usamos el ID específico
+            const overlay = document.getElementById('loading-overlay');
+            const textElement = document.getElementById('loading-text');
+
+            if (form && overlay) {
+                form.addEventListener('submit', function(e) {
+                    // No prevenimos el envío (e.preventDefault), dejamos que ocurra
+                    
+                    // 1. Mostrar overlay inmediatamente
+                    overlay.classList.remove('hidden');
+                    overlay.classList.add('flex');
+                    
+                    // 2. Mensajes de espera
+                    const messages = [
+                        "🎨 Combinando colores...",
+                        "👗 Revisando el clima...",
+                        "👠 Buscando los zapatos ideales...",
+                        "✨ ¡Dando los toques finales!"
+                    ];
+                    
+                    let i = 0;
+                    setInterval(() => {
+                        if (i < messages.length) {
+                            textElement.textContent = messages[i];
+                            i++;
+                        }
+                    }, 2000);
+                });
+            } else {
+                console.error("No se encontró el formulario #outfit-generator-form");
+            }
+        });
+    </script>
 </body>
 </html>

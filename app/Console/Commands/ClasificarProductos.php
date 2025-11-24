@@ -64,8 +64,7 @@ class ClasificarProductos extends Command
             return 'abrigo';
         }
         
-        // 6. Accesorios (SIN JOYAS - Solo funcionales como sombreros, bufandas, bolsos)
-        // Hemos quitado: joya, collar, arete, anillo, pulsera
+       // 6. Accesorios (SOLO FUNCIONALES)
         if (preg_match('/(bolso|mochila|cartera|gorro|sombrero|bufanda|guante|cinturón|cinturon|lentes|gafas|bag|hat|scarf|belt|cap)/', $nombre)) {
             return 'accesorio';
         }

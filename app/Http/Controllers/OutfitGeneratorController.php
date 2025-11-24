@@ -40,10 +40,36 @@ class OutfitGeneratorController extends Controller
             'preferencias' => 'nullable|string'
         ]);
 
-        // Obtener productos aprobados para analizar - CORREGIDO
-        $productos = Producto::aprobados()
-            ->get()
-            ->take(50); // Removido ->with('categoria')
+        // ============================================================
+        // 🎲 ESTRATEGIA DE VARIEDAD Y BALANCE (NUEVO CÓDIGO)
+        // ============================================================
+        
+        // 1. Definimos cantidades para asegurar un mix completo
+        // Usamos 'inRandomOrder()' para que cada vez sean productos DISTINTOS
+        
+        $superiores = Producto::aprobados()->where('tipo_prenda', 'superior')->inRandomOrder()->take(12)->get();
+        $inferiores = Producto::aprobados()->where('tipo_prenda', 'inferior')->inRandomOrder()->take(12)->get();
+        $vestidos   = Producto::aprobados()->where('tipo_prenda', 'vestido')->inRandomOrder()->take(6)->get();
+        
+        // ¡CRUCIAL! Forzamos traer zapatos y abrigos suficientes
+        $zapatos    = Producto::aprobados()->where('tipo_prenda', 'calzado')->inRandomOrder()->take(8)->get();
+        $abrigos    = Producto::aprobados()->where('tipo_prenda', 'abrigo')->inRandomOrder()->take(6)->get();
+        $accesorios = Producto::aprobados()->where('tipo_prenda', 'accesorio')->inRandomOrder()->take(6)->get();
+
+        // 2. Mezclamos todo en una sola bolsa para la IA
+        $productos = $superiores
+            ->merge($inferiores)
+            ->merge($vestidos)
+            ->merge($zapatos)
+            ->merge($abrigos)
+            ->merge($accesorios);
+
+        // RESPALDO: Si la tienda tiene muy poca ropa, rellenamos al azar
+        if ($productos->count() < 15) {
+            $productos = Producto::aprobados()->inRandomOrder()->take(40)->get();
+        }
+        
+        // ============================================================
 
         // Generar outfits con Gemini AI
         $outfits = $this->geminiService->generateOutfits(
